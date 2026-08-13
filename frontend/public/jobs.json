@@ -1,0 +1,4315 @@
+[
+  {
+    "jobId": "JOB1001",
+    "jobTitle": "Frontend Developer",
+    "company": "Mphasis",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1001"
+  },
+  {
+    "jobId": "JOB1002",
+    "jobTitle": "Frontend Developer",
+    "company": "Cognizant",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1002"
+  },
+  {
+    "jobId": "JOB1003",
+    "jobTitle": "Python Developer",
+    "company": "TCS",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1003"
+  },
+  {
+    "jobId": "JOB1004",
+    "jobTitle": "Platform Engineer",
+    "company": "Deloitte",
+    "location": "Noida",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1004"
+  },
+  {
+    "jobId": "JOB1005",
+    "jobTitle": "Software Engineer",
+    "company": "Sopra Steria",
+    "location": "Chennai",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Java",
+      "Python",
+      "SQL",
+      "Git",
+      "REST APIs"
+    ],
+    "preferredSkills": [
+      "Microservices",
+      "Docker",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a software engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on software engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1005"
+  },
+  {
+    "jobId": "JOB1006",
+    "jobTitle": "Data Analyst",
+    "company": "Cognizant",
+    "location": "Delhi",
+    "workMode": "Remote",
+    "qualification": "B.Tech / B.E.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1006"
+  },
+  {
+    "jobId": "JOB1007",
+    "jobTitle": "React Developer",
+    "company": "Microsoft",
+    "location": "Mumbai",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "CSS"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Hooks",
+      "Node.js"
+    ],
+    "jobDescription": "We are looking for a react developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on react developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1007"
+  },
+  {
+    "jobId": "JOB1008",
+    "jobTitle": "Business Analyst",
+    "company": "Wipro",
+    "location": "Bangalore",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1008"
+  },
+  {
+    "jobId": "JOB1009",
+    "jobTitle": "Python Developer",
+    "company": "Deloitte",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1009"
+  },
+  {
+    "jobId": "JOB1010",
+    "jobTitle": "QA Engineer",
+    "company": "Sopra Steria",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1010"
+  },
+  {
+    "jobId": "JOB1011",
+    "jobTitle": "React Developer",
+    "company": "Mindtree",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "CSS"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Hooks",
+      "Node.js"
+    ],
+    "jobDescription": "We are looking for a react developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on react developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1011"
+  },
+  {
+    "jobId": "JOB1012",
+    "jobTitle": "Python Developer",
+    "company": "HCL",
+    "location": "Chennai",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1012"
+  },
+  {
+    "jobId": "JOB1013",
+    "jobTitle": "Business Analyst",
+    "company": "Salesforce",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1013"
+  },
+  {
+    "jobId": "JOB1014",
+    "jobTitle": "Java Developer",
+    "company": "Amazon",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1014"
+  },
+  {
+    "jobId": "JOB1015",
+    "jobTitle": "Data Analyst",
+    "company": "Accenture",
+    "location": "Delhi",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1015"
+  },
+  {
+    "jobId": "JOB1016",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "L&T Technology Services",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1016"
+  },
+  {
+    "jobId": "JOB1017",
+    "jobTitle": "Platform Engineer",
+    "company": "Persistent",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "MCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1017"
+  },
+  {
+    "jobId": "JOB1018",
+    "jobTitle": "React Developer",
+    "company": "Google",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "CSS"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Hooks",
+      "Node.js"
+    ],
+    "jobDescription": "We are looking for a react developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on react developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1018"
+  },
+  {
+    "jobId": "JOB1019",
+    "jobTitle": "Java Developer",
+    "company": "Freshworks",
+    "location": "Bangalore",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1019"
+  },
+  {
+    "jobId": "JOB1020",
+    "jobTitle": "Data Engineer",
+    "company": "Airtel",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1020"
+  },
+  {
+    "jobId": "JOB1021",
+    "jobTitle": "Platform Engineer",
+    "company": "HCL",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "Fresher",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1021"
+  },
+  {
+    "jobId": "JOB1022",
+    "jobTitle": "Platform Engineer",
+    "company": "L&T Technology Services",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "Fresher",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1022"
+  },
+  {
+    "jobId": "JOB1023",
+    "jobTitle": "Full Stack Developer",
+    "company": "Oracle",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1023"
+  },
+  {
+    "jobId": "JOB1024",
+    "jobTitle": "Full Stack Developer",
+    "company": "Freshworks",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1024"
+  },
+  {
+    "jobId": "JOB1025",
+    "jobTitle": "Automation Tester",
+    "company": "Mphasis",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1025"
+  },
+  {
+    "jobId": "JOB1026",
+    "jobTitle": "Automation Tester",
+    "company": "Freshworks",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1026"
+  },
+  {
+    "jobId": "JOB1027",
+    "jobTitle": "React Developer",
+    "company": "Wipro",
+    "location": "Mumbai",
+    "workMode": "Remote",
+    "qualification": "B.Tech / B.E.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "CSS"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Hooks",
+      "Node.js"
+    ],
+    "jobDescription": "We are looking for a react developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on react developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1027"
+  },
+  {
+    "jobId": "JOB1028",
+    "jobTitle": "Python Developer",
+    "company": "Accenture",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1028"
+  },
+  {
+    "jobId": "JOB1029",
+    "jobTitle": "Technical Support Engineer",
+    "company": "Airtel",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Troubleshooting",
+      "Networking",
+      "SQL",
+      "Linux",
+      "Customer Support"
+    ],
+    "preferredSkills": [
+      "ITIL",
+      "Windows Admin",
+      "Azure"
+    ],
+    "jobDescription": "We are looking for a technical support engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on technical support engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1029"
+  },
+  {
+    "jobId": "JOB1030",
+    "jobTitle": "Data Analyst",
+    "company": "Persistent",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1030"
+  },
+  {
+    "jobId": "JOB1031",
+    "jobTitle": "Automation Tester",
+    "company": "L&T Technology Services",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1031"
+  },
+  {
+    "jobId": "JOB1032",
+    "jobTitle": "Software Engineer",
+    "company": "Amazon",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Java",
+      "Python",
+      "SQL",
+      "Git",
+      "REST APIs"
+    ],
+    "preferredSkills": [
+      "Microservices",
+      "Docker",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a software engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on software engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1032"
+  },
+  {
+    "jobId": "JOB1033",
+    "jobTitle": "Java Developer",
+    "company": "Accenture",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "B.Tech / B.E.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1033"
+  },
+  {
+    "jobId": "JOB1034",
+    "jobTitle": "QA Engineer",
+    "company": "Nagarro",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1034"
+  },
+  {
+    "jobId": "JOB1035",
+    "jobTitle": "Technical Support Engineer",
+    "company": "Cognizant",
+    "location": "Pune",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Troubleshooting",
+      "Networking",
+      "SQL",
+      "Linux",
+      "Customer Support"
+    ],
+    "preferredSkills": [
+      "ITIL",
+      "Windows Admin",
+      "Azure"
+    ],
+    "jobDescription": "We are looking for a technical support engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on technical support engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1035"
+  },
+  {
+    "jobId": "JOB1036",
+    "jobTitle": "Data Engineer",
+    "company": "Wipro",
+    "location": "Delhi",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1036"
+  },
+  {
+    "jobId": "JOB1037",
+    "jobTitle": "Java Developer",
+    "company": "BrowserStack",
+    "location": "Bangalore",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1037"
+  },
+  {
+    "jobId": "JOB1038",
+    "jobTitle": "Frontend Developer",
+    "company": "Sopra Steria",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1038"
+  },
+  {
+    "jobId": "JOB1039",
+    "jobTitle": "Full Stack Developer",
+    "company": "Oracle",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "Fresher",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1039"
+  },
+  {
+    "jobId": "JOB1040",
+    "jobTitle": "Platform Engineer",
+    "company": "Zoho",
+    "location": "Bangalore",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "Fresher",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1040"
+  },
+  {
+    "jobId": "JOB1041",
+    "jobTitle": "QA Engineer",
+    "company": "Freshworks",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1041"
+  },
+  {
+    "jobId": "JOB1042",
+    "jobTitle": "Business Analyst",
+    "company": "Sopra Steria",
+    "location": "Hyderabad",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1042"
+  },
+  {
+    "jobId": "JOB1043",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "HCL",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1043"
+  },
+  {
+    "jobId": "JOB1044",
+    "jobTitle": "Cloud Engineer",
+    "company": "Deloitte",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1044"
+  },
+  {
+    "jobId": "JOB1045",
+    "jobTitle": "Java Developer",
+    "company": "Amazon",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1045"
+  },
+  {
+    "jobId": "JOB1046",
+    "jobTitle": "Python Developer",
+    "company": "Nagarro",
+    "location": "Chennai",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1046"
+  },
+  {
+    "jobId": "JOB1047",
+    "jobTitle": "QA Engineer",
+    "company": "Sopra Steria",
+    "location": "Noida",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1047"
+  },
+  {
+    "jobId": "JOB1048",
+    "jobTitle": "Java Developer",
+    "company": "Cybage",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1048"
+  },
+  {
+    "jobId": "JOB1049",
+    "jobTitle": "UI Developer",
+    "company": "Deloitte",
+    "location": "Pune",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "React"
+    ],
+    "preferredSkills": [
+      "Angular",
+      "Vue",
+      "Accessibility"
+    ],
+    "jobDescription": "We are looking for a ui developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on ui developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1049"
+  },
+  {
+    "jobId": "JOB1050",
+    "jobTitle": "Cloud Engineer",
+    "company": "Mphasis",
+    "location": "Kolkata",
+    "workMode": "Hybrid",
+    "qualification": "B.Tech / B.E.",
+    "experience": "Fresher",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1050"
+  },
+  {
+    "jobId": "JOB1051",
+    "jobTitle": "Frontend Developer",
+    "company": "Cybage",
+    "location": "Bangalore",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1051"
+  },
+  {
+    "jobId": "JOB1052",
+    "jobTitle": "Python Developer",
+    "company": "Microsoft",
+    "location": "Pune",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1052"
+  },
+  {
+    "jobId": "JOB1053",
+    "jobTitle": "Platform Engineer",
+    "company": "Mindtree",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "Fresher",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1053"
+  },
+  {
+    "jobId": "JOB1054",
+    "jobTitle": "Platform Engineer",
+    "company": "Mindtree",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "B.Tech / B.E.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1054"
+  },
+  {
+    "jobId": "JOB1055",
+    "jobTitle": "Frontend Developer",
+    "company": "Wipro",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1055"
+  },
+  {
+    "jobId": "JOB1056",
+    "jobTitle": "UI Developer",
+    "company": "Deloitte",
+    "location": "Pune",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "React"
+    ],
+    "preferredSkills": [
+      "Angular",
+      "Vue",
+      "Accessibility"
+    ],
+    "jobDescription": "We are looking for a ui developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on ui developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1056"
+  },
+  {
+    "jobId": "JOB1057",
+    "jobTitle": "DevOps Engineer",
+    "company": "Zeta",
+    "location": "Hyderabad",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "AWS",
+      "Linux"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GitHub Actions",
+      "Monitoring"
+    ],
+    "jobDescription": "We are looking for a devops engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on devops engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1057"
+  },
+  {
+    "jobId": "JOB1058",
+    "jobTitle": "Java Developer",
+    "company": "HCL",
+    "location": "Hyderabad",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1058"
+  },
+  {
+    "jobId": "JOB1059",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "BrowserStack",
+    "location": "Remote",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1059"
+  },
+  {
+    "jobId": "JOB1060",
+    "jobTitle": "Backend Developer",
+    "company": "Accenture",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "REST APIs",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Docker",
+      "Redis",
+      "GraphQL"
+    ],
+    "jobDescription": "We are looking for a backend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on backend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1060"
+  },
+  {
+    "jobId": "JOB1061",
+    "jobTitle": "Java Developer",
+    "company": "Cognizant",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "B.Tech / B.E.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1061"
+  },
+  {
+    "jobId": "JOB1062",
+    "jobTitle": "QA Engineer",
+    "company": "Airtel",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "MCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1062"
+  },
+  {
+    "jobId": "JOB1063",
+    "jobTitle": "Backend Developer",
+    "company": "BrowserStack",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "REST APIs",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Docker",
+      "Redis",
+      "GraphQL"
+    ],
+    "jobDescription": "We are looking for a backend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on backend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1063"
+  },
+  {
+    "jobId": "JOB1064",
+    "jobTitle": "UI Developer",
+    "company": "Capgemini",
+    "location": "Noida",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "React"
+    ],
+    "preferredSkills": [
+      "Angular",
+      "Vue",
+      "Accessibility"
+    ],
+    "jobDescription": "We are looking for a ui developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on ui developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1064"
+  },
+  {
+    "jobId": "JOB1065",
+    "jobTitle": "Frontend Developer",
+    "company": "Capgemini",
+    "location": "Noida",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1065"
+  },
+  {
+    "jobId": "JOB1066",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Mindtree",
+    "location": "Delhi",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1066"
+  },
+  {
+    "jobId": "JOB1067",
+    "jobTitle": "Data Analyst",
+    "company": "Airtel",
+    "location": "Noida",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "Fresher",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1067"
+  },
+  {
+    "jobId": "JOB1068",
+    "jobTitle": "React Developer",
+    "company": "HCL",
+    "location": "Remote",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "CSS"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Hooks",
+      "Node.js"
+    ],
+    "jobDescription": "We are looking for a react developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on react developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1068"
+  },
+  {
+    "jobId": "JOB1069",
+    "jobTitle": "DevOps Engineer",
+    "company": "Wipro",
+    "location": "Chennai",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "Fresher",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "AWS",
+      "Linux"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GitHub Actions",
+      "Monitoring"
+    ],
+    "jobDescription": "We are looking for a devops engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on devops engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1069"
+  },
+  {
+    "jobId": "JOB1070",
+    "jobTitle": "Data Engineer",
+    "company": "Cybage",
+    "location": "Delhi",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1070"
+  },
+  {
+    "jobId": "JOB1071",
+    "jobTitle": "Frontend Developer",
+    "company": "Nagarro",
+    "location": "Noida",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "TypeScript"
+    ],
+    "preferredSkills": [
+      "Redux",
+      "Webpack",
+      "Next.js"
+    ],
+    "jobDescription": "We are looking for a frontend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on frontend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1071"
+  },
+  {
+    "jobId": "JOB1072",
+    "jobTitle": "Data Engineer",
+    "company": "Paytm",
+    "location": "Hyderabad",
+    "workMode": "On-site",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1072"
+  },
+  {
+    "jobId": "JOB1073",
+    "jobTitle": "Python Developer",
+    "company": "Oracle",
+    "location": "Delhi",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "Fresher",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1073"
+  },
+  {
+    "jobId": "JOB1074",
+    "jobTitle": "Cloud Engineer",
+    "company": "L&T Technology Services",
+    "location": "Remote",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1074"
+  },
+  {
+    "jobId": "JOB1075",
+    "jobTitle": "Cloud Engineer",
+    "company": "Google",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1075"
+  },
+  {
+    "jobId": "JOB1076",
+    "jobTitle": "Full Stack Developer",
+    "company": "Google",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1076"
+  },
+  {
+    "jobId": "JOB1077",
+    "jobTitle": "Data Analyst",
+    "company": "Tech Mahindra",
+    "location": "Noida",
+    "workMode": "On-site",
+    "qualification": "MCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1077"
+  },
+  {
+    "jobId": "JOB1078",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Salesforce",
+    "location": "Pune",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1078"
+  },
+  {
+    "jobId": "JOB1079",
+    "jobTitle": "Cloud Engineer",
+    "company": "Accenture",
+    "location": "Remote",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1079"
+  },
+  {
+    "jobId": "JOB1080",
+    "jobTitle": "QA Engineer",
+    "company": "Mindtree",
+    "location": "Mumbai",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1080"
+  },
+  {
+    "jobId": "JOB1081",
+    "jobTitle": "QA Engineer",
+    "company": "Infosys",
+    "location": "Kolkata",
+    "workMode": "On-site",
+    "qualification": "B.Tech / B.E.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1081"
+  },
+  {
+    "jobId": "JOB1082",
+    "jobTitle": "Data Analyst",
+    "company": "L&T Technology Services",
+    "location": "Noida",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1082"
+  },
+  {
+    "jobId": "JOB1083",
+    "jobTitle": "Software Engineer",
+    "company": "Mphasis",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Java",
+      "Python",
+      "SQL",
+      "Git",
+      "REST APIs"
+    ],
+    "preferredSkills": [
+      "Microservices",
+      "Docker",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a software engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on software engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1083"
+  },
+  {
+    "jobId": "JOB1084",
+    "jobTitle": "Automation Tester",
+    "company": "Paytm",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1084"
+  },
+  {
+    "jobId": "JOB1085",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Wipro",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1085"
+  },
+  {
+    "jobId": "JOB1086",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "L&T Technology Services",
+    "location": "Remote",
+    "workMode": "Hybrid",
+    "qualification": "MCA",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1086"
+  },
+  {
+    "jobId": "JOB1087",
+    "jobTitle": "Technical Support Engineer",
+    "company": "BrowserStack",
+    "location": "Kolkata",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Troubleshooting",
+      "Networking",
+      "SQL",
+      "Linux",
+      "Customer Support"
+    ],
+    "preferredSkills": [
+      "ITIL",
+      "Windows Admin",
+      "Azure"
+    ],
+    "jobDescription": "We are looking for a technical support engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on technical support engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1087"
+  },
+  {
+    "jobId": "JOB1088",
+    "jobTitle": "Automation Tester",
+    "company": "Freshworks",
+    "location": "Kolkata",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1088"
+  },
+  {
+    "jobId": "JOB1089",
+    "jobTitle": "Cloud Engineer",
+    "company": "Accenture",
+    "location": "Pune",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Linux",
+      "Networking"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GCP",
+      "Kubernetes"
+    ],
+    "jobDescription": "We are looking for a cloud engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on cloud engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1089"
+  },
+  {
+    "jobId": "JOB1090",
+    "jobTitle": "Backend Developer",
+    "company": "Accenture",
+    "location": "Chennai",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "REST APIs",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Docker",
+      "Redis",
+      "GraphQL"
+    ],
+    "jobDescription": "We are looking for a backend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on backend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1090"
+  },
+  {
+    "jobId": "JOB1091",
+    "jobTitle": "Python Developer",
+    "company": "Deloitte",
+    "location": "Noida",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1091"
+  },
+  {
+    "jobId": "JOB1092",
+    "jobTitle": "Data Analyst",
+    "company": "Infosys",
+    "location": "Noida",
+    "workMode": "Hybrid",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1092"
+  },
+  {
+    "jobId": "JOB1093",
+    "jobTitle": "Business Analyst",
+    "company": "L&T Technology Services",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "M.Tech",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1093"
+  },
+  {
+    "jobId": "JOB1094",
+    "jobTitle": "Data Engineer",
+    "company": "Google",
+    "location": "Remote",
+    "workMode": "On-site",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1094"
+  },
+  {
+    "jobId": "JOB1095",
+    "jobTitle": "DevOps Engineer",
+    "company": "IBM",
+    "location": "Noida",
+    "workMode": "Hybrid",
+    "qualification": "B.Tech / B.E.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "AWS",
+      "Linux"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GitHub Actions",
+      "Monitoring"
+    ],
+    "jobDescription": "We are looking for a devops engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on devops engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1095"
+  },
+  {
+    "jobId": "JOB1096",
+    "jobTitle": "Business Analyst",
+    "company": "Airtel",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "Fresher",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1096"
+  },
+  {
+    "jobId": "JOB1097",
+    "jobTitle": "Software Engineer",
+    "company": "LTIMindtree",
+    "location": "Bangalore",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Java",
+      "Python",
+      "SQL",
+      "Git",
+      "REST APIs"
+    ],
+    "preferredSkills": [
+      "Microservices",
+      "Docker",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a software engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on software engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1097"
+  },
+  {
+    "jobId": "JOB1098",
+    "jobTitle": "Full Stack Developer",
+    "company": "Salesforce",
+    "location": "Hyderabad",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1098"
+  },
+  {
+    "jobId": "JOB1099",
+    "jobTitle": "UI Developer",
+    "company": "Salesforce",
+    "location": "Delhi",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "React"
+    ],
+    "preferredSkills": [
+      "Angular",
+      "Vue",
+      "Accessibility"
+    ],
+    "jobDescription": "We are looking for a ui developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on ui developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1099"
+  },
+  {
+    "jobId": "JOB1100",
+    "jobTitle": "Python Developer",
+    "company": "Mindtree",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "Fresher",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1100"
+  },
+  {
+    "jobId": "JOB1101",
+    "jobTitle": "Python Developer",
+    "company": "IBM",
+    "location": "Hyderabad",
+    "workMode": "Remote",
+    "qualification": "B.Sc.",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Python",
+      "Django",
+      "Flask",
+      "FastAPI",
+      "SQL"
+    ],
+    "preferredSkills": [
+      "FastAPI",
+      "Pytest",
+      "AWS"
+    ],
+    "jobDescription": "We are looking for a python developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on python developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1101"
+  },
+  {
+    "jobId": "JOB1102",
+    "jobTitle": "Backend Developer",
+    "company": "TCS",
+    "location": "Pune",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "REST APIs",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Docker",
+      "Redis",
+      "GraphQL"
+    ],
+    "jobDescription": "We are looking for a backend developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on backend developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1102"
+  },
+  {
+    "jobId": "JOB1103",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Deloitte",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "Fresher",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1103"
+  },
+  {
+    "jobId": "JOB1104",
+    "jobTitle": "Full Stack Developer",
+    "company": "Mindtree",
+    "location": "Mumbai",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "SQL",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "CI/CD"
+    ],
+    "jobDescription": "We are looking for a full stack developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on full stack developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1104"
+  },
+  {
+    "jobId": "JOB1105",
+    "jobTitle": "Business Analyst",
+    "company": "LTIMindtree",
+    "location": "Noida",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "Fresher",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1105"
+  },
+  {
+    "jobId": "JOB1106",
+    "jobTitle": "QA Engineer",
+    "company": "Paytm",
+    "location": "Bangalore",
+    "workMode": "On-site",
+    "qualification": "M.Tech",
+    "experience": "Fresher",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1106"
+  },
+  {
+    "jobId": "JOB1107",
+    "jobTitle": "Java Developer",
+    "company": "LTIMindtree",
+    "location": "Delhi",
+    "workMode": "On-site",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Hibernate",
+      "SQL",
+      "Maven"
+    ],
+    "preferredSkills": [
+      "Spring Security",
+      "Kafka",
+      "Microservices"
+    ],
+    "jobDescription": "We are looking for a java developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on java developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1107"
+  },
+  {
+    "jobId": "JOB1108",
+    "jobTitle": "UI Developer",
+    "company": "Nagarro",
+    "location": "Hyderabad",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "Fresher",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "React"
+    ],
+    "preferredSkills": [
+      "Angular",
+      "Vue",
+      "Accessibility"
+    ],
+    "jobDescription": "We are looking for a ui developer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on ui developer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1108"
+  },
+  {
+    "jobId": "JOB1109",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Microsoft",
+    "location": "Chennai",
+    "workMode": "Hybrid",
+    "qualification": "B.Sc.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1109"
+  },
+  {
+    "jobId": "JOB1110",
+    "jobTitle": "Platform Engineer",
+    "company": "Zoho",
+    "location": "Kolkata",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Kubernetes",
+      "Linux",
+      "CI/CD",
+      "Terraform",
+      "Cloud"
+    ],
+    "preferredSkills": [
+      "GitOps",
+      "Observability",
+      "Prometheus"
+    ],
+    "jobDescription": "We are looking for a platform engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on platform engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1110"
+  },
+  {
+    "jobId": "JOB1111",
+    "jobTitle": "QA Engineer",
+    "company": "Sopra Steria",
+    "location": "Bangalore",
+    "workMode": "Hybrid",
+    "qualification": "BCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b912L - \u20b918L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1111"
+  },
+  {
+    "jobId": "JOB1112",
+    "jobTitle": "Business Analyst",
+    "company": "Salesforce",
+    "location": "Delhi",
+    "workMode": "Remote",
+    "qualification": "BCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "SQL",
+      "Business Analysis",
+      "Documentation",
+      "Stakeholder Management"
+    ],
+    "preferredSkills": [
+      "Agile",
+      "Power BI",
+      "Process Mapping"
+    ],
+    "jobDescription": "We are looking for a business analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on business analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1112"
+  },
+  {
+    "jobId": "JOB1113",
+    "jobTitle": "Data Analyst",
+    "company": "Zeta",
+    "location": "Delhi",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b98L - \u20b912L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1113"
+  },
+  {
+    "jobId": "JOB1114",
+    "jobTitle": "DevOps Engineer",
+    "company": "Paytm",
+    "location": "Remote",
+    "workMode": "Remote",
+    "qualification": "MCA",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "AWS",
+      "Linux"
+    ],
+    "preferredSkills": [
+      "Azure",
+      "GitHub Actions",
+      "Monitoring"
+    ],
+    "jobDescription": "We are looking for a devops engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on devops engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1114"
+  },
+  {
+    "jobId": "JOB1115",
+    "jobTitle": "Data Engineer",
+    "company": "IBM",
+    "location": "Kolkata",
+    "workMode": "On-site",
+    "qualification": "B.Sc.",
+    "experience": "2-3 Years",
+    "salaryRange": "\u20b910L - \u20b915L",
+    "requiredSkills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark",
+      "AWS"
+    ],
+    "preferredSkills": [
+      "Airflow",
+      "Spark",
+      "Snowflake"
+    ],
+    "jobDescription": "We are looking for a data engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1115"
+  },
+  {
+    "jobId": "JOB1116",
+    "jobTitle": "Technical Support Engineer",
+    "company": "Paytm",
+    "location": "Kolkata",
+    "workMode": "Remote",
+    "qualification": "B.Tech / B.E.",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "Troubleshooting",
+      "Networking",
+      "SQL",
+      "Linux",
+      "Customer Support"
+    ],
+    "preferredSkills": [
+      "ITIL",
+      "Windows Admin",
+      "Azure"
+    ],
+    "jobDescription": "We are looking for a technical support engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on technical support engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1116"
+  },
+  {
+    "jobId": "JOB1117",
+    "jobTitle": "QA Engineer",
+    "company": "Google",
+    "location": "Mumbai",
+    "workMode": "On-site",
+    "qualification": "MCA",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b96L - \u20b99L",
+    "requiredSkills": [
+      "Selenium",
+      "JUnit",
+      "TestNG",
+      "SQL",
+      "Automation"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "API Testing",
+      "Performance Testing"
+    ],
+    "jobDescription": "We are looking for a qa engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on qa engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Cab facility",
+      "Performance bonus",
+      "Health insurance",
+      "Learning allowance"
+    ],
+    "applyLink": "https://example.com/apply/1117"
+  },
+  {
+    "jobId": "JOB1118",
+    "jobTitle": "Automation Tester",
+    "company": "Persistent",
+    "location": "Delhi",
+    "workMode": "Hybrid",
+    "qualification": "Diploma",
+    "experience": "1-2 Years",
+    "salaryRange": "\u20b95L - \u20b98L",
+    "requiredSkills": [
+      "Selenium",
+      "Java",
+      "TestNG",
+      "API Testing",
+      "Git"
+    ],
+    "preferredSkills": [
+      "Cypress",
+      "Playwright",
+      "Postman"
+    ],
+    "jobDescription": "We are looking for a automation tester to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on automation tester initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1118"
+  },
+  {
+    "jobId": "JOB1119",
+    "jobTitle": "Machine Learning Engineer",
+    "company": "Paytm",
+    "location": "Mumbai",
+    "workMode": "Hybrid",
+    "qualification": "M.Tech",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b93L - \u20b95L",
+    "requiredSkills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "NLP"
+    ],
+    "preferredSkills": [
+      "Deep Learning",
+      "TensorFlow",
+      "NLP"
+    ],
+    "jobDescription": "We are looking for a machine learning engineer to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on machine learning engineer initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Skill-based training",
+      "Team outings",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1119"
+  },
+  {
+    "jobId": "JOB1120",
+    "jobTitle": "Data Analyst",
+    "company": "BrowserStack",
+    "location": "Delhi",
+    "workMode": "Remote",
+    "qualification": "Diploma",
+    "experience": "0-1 Years",
+    "salaryRange": "\u20b94L - \u20b96L",
+    "requiredSkills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Python",
+      "Analytics"
+    ],
+    "preferredSkills": [
+      "Tableau",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "jobDescription": "We are looking for a data analyst to join our engineering/product team and contribute to scalable, high-quality delivery.",
+    "responsibilities": [
+      "Collaborate with cross-functional teams on data analyst initiatives.",
+      "Write maintainable and production-ready code.",
+      "Participate in code reviews, testing, and deployment workflows.",
+      "Support documentation, troubleshooting, and stakeholder communication."
+    ],
+    "benefits": [
+      "Flexible work hours",
+      "Remote-first collaboration",
+      "Learning stipend",
+      "Health insurance"
+    ],
+    "applyLink": "https://example.com/apply/1120"
+  }
+]

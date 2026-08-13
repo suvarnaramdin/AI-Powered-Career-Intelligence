@@ -1,0 +1,5 @@
+Name: Admin User
+Email: dashboard-admin@example.com
+Skills: Python, SQL
+Education: MBA
+Experience: Admin at Career Platform

@@ -1,0 +1,4 @@
+Name: Analyst User
+Email: analyst@example.com
+Skills: Python, React, SQL
+Experience: 2 years

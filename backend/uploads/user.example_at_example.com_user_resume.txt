@@ -1,0 +1,5 @@
+Name: User Example
+Email: user.example@example.com
+Skills: Python, FastAPI
+Education: B.Tech
+Experience: Backend Engineer
