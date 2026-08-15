@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaEye } from "react-icons/fa";
-import { getAdminToken } from "./adminAuth";
+import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { adminFetch, getAdminToken } from "./adminAuth";
 
 const ADMIN_API = "http://127.0.0.1:8000";
 
@@ -25,41 +25,44 @@ export default function AdminProfilesPage() {
   const [completionFilter, setCompletionFilter] = useState("");
   const [summary, setSummary] = useState({ total_profiles: 0, completed_profiles: 0, incomplete_profiles: 0, average_profile_completion: 0 });
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState({ email: "", fullname: "", headline: "", location: "", about: "", skills: "", experience: "" });
+  const [submitting, setSubmitting] = useState(false);
   const debouncedSearch = useDebouncedValue(search, 350);
 
+  const loadProfiles = async () => {
+    const token = getAdminToken();
+    if (!token) {
+      setLoading(false);
+      setError("Admin session expired. Please log in again.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+      const query = new URLSearchParams({ page: String(page), page_size: String(pageSize), search: debouncedSearch });
+      if (completionFilter) query.set("completion", completionFilter);
+
+      const response = await fetch(`${ADMIN_API}/api/admin/profiles?${query.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to load profile records.");
+      }
+
+      const payload = await response.json();
+      setItems(payload.items || []);
+      setSummary(payload.summary || { total_profiles: 0, completed_profiles: 0, incomplete_profiles: 0, average_profile_completion: 0 });
+    } catch (loadError) {
+      setError(loadError.message || "Unable to load profiles.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadProfiles = async () => {
-      const token = getAdminToken();
-      if (!token) {
-        setLoading(false);
-        setError("Admin session expired. Please log in again.");
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError("");
-        const query = new URLSearchParams({ page: String(page), page_size: String(pageSize), search: debouncedSearch });
-        if (completionFilter) query.set("completion", completionFilter);
-
-        const response = await fetch(`${ADMIN_API}/api/admin/profiles?${query.toString()}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error("Unable to load profile records.");
-        }
-
-        const payload = await response.json();
-        setItems(payload.items || []);
-        setSummary(payload.summary || { total_profiles: 0, completed_profiles: 0, incomplete_profiles: 0, average_profile_completion: 0 });
-      } catch (loadError) {
-        setError(loadError.message || "Unable to load profiles.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadProfiles();
   }, [page, pageSize, debouncedSearch, completionFilter]);
 
@@ -84,6 +87,68 @@ export default function AdminProfilesPage() {
 
   const total = summary.total_profiles || 0;
   const totalPages = useMemo(() => Math.max(Math.ceil(total / pageSize), 1), [total, pageSize]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!form.email.trim()) {
+      setError("Profile email is required.");
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const body = {
+        email: form.email,
+        fullname: form.fullname,
+        headline: form.headline,
+        location: form.location,
+        about: form.about,
+        skills: form.skills ? form.skills.split(",").map((value) => value.trim()).filter(Boolean) : [],
+        experience: form.experience ? [{ company: "Custom", designation: form.experience.trim() }] : [],
+      };
+
+      if (editingId) {
+        await adminFetch(`/api/admin/profiles/${editingId}`, { method: "PUT", body: JSON.stringify(body) });
+      } else {
+        await adminFetch("/api/admin/profiles", { method: "POST", body: JSON.stringify(body) });
+      }
+
+      setForm({ email: "", fullname: "", headline: "", location: "", about: "", skills: "", experience: "" });
+      setEditingId(null);
+      setPage(1);
+      await loadProfiles();
+    } catch (submitError) {
+      setError(submitError.message || "Failed to save profile.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEdit = (profile) => {
+    setEditingId(profile.id);
+    setForm({
+      email: profile.email || "",
+      fullname: profile.fullname || "",
+      headline: profile.headline || "",
+      location: profile.location || "",
+      about: profile.about || "",
+      skills: Array.isArray(profile.skills) ? profile.skills.join(", ") : "",
+      experience: Array.isArray(profile.experience) ? (profile.experience[0]?.designation || profile.experience[0]?.company || "") : "",
+    });
+  };
+
+  const handleDelete = async (profileId) => {
+    if (!window.confirm("Delete this profile? This action cannot be undone.")) return;
+
+    try {
+      await adminFetch(`/api/admin/profiles/${profileId}`, { method: "DELETE" });
+      await loadProfiles();
+    } catch (deleteError) {
+      setError(deleteError.message || "Unable to delete profile.");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -155,7 +220,11 @@ export default function AdminProfilesPage() {
                   <td className="px-5 py-4 text-sm text-slate-600">{profile.location || "N/A"}</td>
                   <td className="px-5 py-4 text-sm text-slate-600">{profile.completion_percentage ?? 0}%</td>
                   <td className="px-5 py-4 text-sm">
-                    <button onClick={() => openProfileDetails(profile.id)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"><FaEye /> View</button>
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={() => openProfileDetails(profile.id)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"><FaEye /> View</button>
+                      <button onClick={() => handleEdit(profile)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"><FaEdit /> Edit</button>
+                      <button onClick={() => handleDelete(profile.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-red-600 hover:bg-red-100"><FaTrash /> Delete</button>
+                    </div>
                   </td>
                 </tr>
               )) : <tr><td colSpan={7} className="px-5 py-12 text-center text-slate-500">No profiles found for the current filters.</td></tr>}

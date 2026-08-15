@@ -33,6 +33,8 @@ export default function Login() {
 
       localStorage.setItem("user", res.data.user);
       localStorage.setItem("email", res.data.email);
+      localStorage.setItem("selectedEmail", res.data.email);
+      localStorage.setItem("token", res.data.access_token || "");
 
       if (remember) {
         localStorage.setItem("rememberUser", form.email);

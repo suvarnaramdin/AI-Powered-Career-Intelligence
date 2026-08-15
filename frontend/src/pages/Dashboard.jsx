@@ -24,16 +24,20 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const user = localStorage.getItem("user") || "User";
   const email = localStorage.getItem("email") || "";
+  const token = localStorage.getItem("token") || "";
   const [profile, setProfile] = useState(null);
   const [resume, setResume] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("email");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -63,73 +67,181 @@ export default function Dashboard() {
     return haystack.includes(search.trim().toLowerCase());
   });
 
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      if (!email) return;
+  // Fetch dashboard data
+  const loadDashboardData = async () => {
+    if (!email) return;
 
-      try {
-        const profileRes = await axios.get(`${API}/profile/${email}`);
-        setProfile(profileRes.data);
-      } catch (err) {
-        console.log(err);
-      }
-
-      try {
-        const resumeRes = await axios.get(`${API}/resumes/${email}`);
-        if (resumeRes.data.length > 0) {
-          setResume(resumeRes.data[0]);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-      try {
-        const jobsRes = await axios.get(`${API}/job-description/${email}`);
-        setJobs(jobsRes.data || []);
-        const saved = localStorage.getItem("selectedJob");
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            const match = (jobsRes.data || []).find((j) => String(j.id) === String(parsed.id));
-            if (match) setSelectedJob(match);
-          } catch (e) {}
-        } else if (jobsRes.data && jobsRes.data.length > 0) {
-          setSelectedJob(jobsRes.data[0]);
-          localStorage.setItem("selectedJob", JSON.stringify(jobsRes.data[0]));
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    loadDashboardData();
-  }, [email]);
-
-  const analyzeResume = async (job) => {
-    const activeJob = job || selectedJob;
     try {
-      const selectedResumeId = resume?.id || localStorage.getItem("resume_id");
-      if (!selectedResumeId) {
-        alert("Please upload a resume first.");
-        return;
-      }
-      if (!activeJob) {
-        alert("Please select or add a job description first.");
-        return;
-      }
-
-      const res = await axios.post(`${API}/ats/analyze/${selectedResumeId}/${activeJob.id}`);
-      setAnalysisResult(res.data);
+      const profileRes = await axios.get(`${API}/profile/${email}`);
+      setProfile(profileRes.data);
     } catch (err) {
-      console.error(err);
-      alert("Analysis failed");
+      console.log(err);
+    }
+
+    try {
+      const resumeRes = await axios.get(`${API}/resumes/${email}`);
+      if (resumeRes.data.length > 0) {
+        setResume(resumeRes.data[0]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      const jobsRes = await axios.get(`${API}/job-description/${email}`);
+      setJobs(jobsRes.data || []);
+      const saved = localStorage.getItem("selectedJob");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const match = (jobsRes.data || []).find((j) => String(j.id) === String(parsed.id));
+          if (match) setSelectedJob(match);
+        } catch (e) {}
+      } else if (jobsRes.data && jobsRes.data.length > 0) {
+        setSelectedJob(jobsRes.data[0]);
+        localStorage.setItem("selectedJob", JSON.stringify(jobsRes.data[0]));
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
+  const analyzeResume = async (job) => {
+    if (!resume || !job) return;
+
+    try {
+      const response = await axios.post(
+        `${API}/api/dashboard`,
+        {
+          resume_id: resume.id,
+          job_description_id: job.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setAnalysisResult({
+        ats_score: Number(response.data.resume_score ?? 0),
+        match_percentage: Number(response.data.skill_match ?? 0),
+        matched_skills: response.data.matched_skills || [],
+        missing_skills: response.data.missing_skills || [],
+      });
+    } catch (err) {
+      console.error("Failed to fetch ATS comparison:", err);
+      setAnalysisResult({
+        ats_score: 0,
+        match_percentage: 0,
+        matched_skills: [],
+        missing_skills: [],
+      });
+    }
+  };
+
+  // Calculate dynamic dashboard metrics
+  const calculateDashboardMetrics = async () => {
+    if (!resume || !selectedJob) {
+      // New user without resume or job - show empty state
+      setDashboardData({
+        resume_score: "Not Available",
+        skill_match: "Not Available",
+        career_paths: 0,
+        courses: 0,
+        career_readiness: 0,
+        employability: 0,
+        technical_strength: 0,
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API}/api/dashboard`,
+        {
+          resume_id: resume.id,
+          job_description_id: selectedJob.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setDashboardData(response.data);
+      setAnalysisResult({
+        ats_score: Number(response.data.resume_score ?? 0),
+        match_percentage: Number(response.data.skill_match ?? 0),
+        matched_skills: response.data.matched_skills || [],
+        missing_skills: response.data.missing_skills || [],
+      });
+    } catch (err) {
+      console.error("Failed to fetch dashboard metrics:", err);
+      // On error, show empty state
+      setDashboardData({
+        resume_score: "Not Available",
+        skill_match: "Not Available",
+        career_paths: 0,
+        courses: 0,
+        career_readiness: 0,
+        employability: 0,
+        technical_strength: 0,
+      });
+      setAnalysisResult({
+        ats_score: 0,
+        match_percentage: 0,
+        matched_skills: [],
+        missing_skills: [],
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load data on mount and when dependencies change
+  useEffect(() => {
+    loadDashboardData();
+  }, [email]);
+
+  // Calculate metrics whenever resume or job changes
+  useEffect(() => {
+    calculateDashboardMetrics();
+  }, [resume?.id, selectedJob?.id, token]);
+
+  // Format display value
+  const formatValue = (value) => {
+    if (value === "Not Available") return "Not Available";
+    if (typeof value === "number") {
+      return value > 1 ? `${Math.round(value)}%` : value;
+    }
+    return value || "Not Available";
+  };
+
   const cards = [
-    { title: "Resume Score", value: analysisResult ? `${analysisResult.ats_score}%` : "82%", color: "bg-blue-600" },
-    { title: "Skill Match", value: analysisResult ? `${analysisResult.match_percentage}%` : "76%", color: "bg-green-600" },
-    { title: "Career Paths", value: "12", color: "bg-purple-600" },
-    { title: "Courses", value: "18", color: "bg-orange-500" },
+    { 
+      title: "Resume Score", 
+      value: dashboardData ? formatValue(dashboardData.resume_score) : "—",
+      color: "bg-blue-600" 
+    },
+    { 
+      title: "Skill Match", 
+      value: dashboardData ? formatValue(dashboardData.skill_match) : "—",
+      color: "bg-green-600" 
+    },
+    { 
+      title: "Career Paths", 
+      value: dashboardData?.career_paths ?? "—",
+      color: "bg-purple-600" 
+    },
+    { 
+      title: "Courses", 
+      value: dashboardData?.courses ?? "—",
+      color: "bg-orange-500" 
+    },
   ];
 
   return (
@@ -307,11 +419,11 @@ export default function Dashboard() {
                     <div className="grid md:grid-cols-2 gap-6 mt-6">
                       <div>
                         <h4 className="font-semibold text-green-700 mb-2">Matched Skills</h4>
-                        {analysisResult.matched_skills.map((s) => <div key={s} className="bg-green-50 rounded p-2 mb-2">{s}</div>)}
+                        {(analysisResult.matched_skills || []).map((s) => <div key={s} className="bg-green-50 rounded p-2 mb-2">{s}</div>)}
                       </div>
                       <div>
                         <h4 className="font-semibold text-red-700 mb-2">Missing Skills</h4>
-                        {analysisResult.missing_skills.map((s) => <div key={s} className="bg-red-50 rounded p-2 mb-2">{s}</div>)}
+                        {(analysisResult.missing_skills || []).map((s) => <div key={s} className="bg-red-50 rounded p-2 mb-2">{s}</div>)}
                       </div>
                     </div>
                   </div>

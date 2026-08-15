@@ -2,57 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import InsightLayout from "../components/InsightLayout";
 import ModuleAnalysisControls from "../components/ModuleAnalysisControls";
-import CareerRoadmap from "../components/CareerRoadmap";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 const API = "http://127.0.0.1:8000";
-
-function formatSalary(value) {
-  if (!value) return "Not available";
-  return value;
-}
-
-function getSalaryRange(analysis) {
-  if (!analysis) return "Not available";
-  const careerSalary = analysis?.career_recommendations?.find((role) => role?.average_salary)?.average_salary;
-  const jobSalary = analysis?.job_recommendations?.find((job) => job?.salary)?.salary;
-  const expectedSalary = analysis?.expected_salary;
-  if (careerSalary) return careerSalary;
-  if (jobSalary) return jobSalary;
-  if (expectedSalary) return expectedSalary;
-  return "7 to 8 lakhs per annum";
-}
-
-function deriveExperienceLevel(score) {
-  if (score >= 85) return "Senior-Level";
-  if (score >= 70) return "Mid-Level";
-  if (score >= 50) return "Associate-Level";
-  return "Entry-Level";
-}
-
-function buildReadinessPercent(analysis) {
-  if (!analysis) return 0;
-  const ats = analysis.analytics?.ats_score || 0;
-  const completion = analysis.analytics?.profile_completion || 0;
-  const strength = analysis.analytics?.resume_strength || 0;
-  return Math.round((ats * 0.4 + completion * 0.3 + strength * 0.3) / 1);
-}
-
-function buildIndustryReadiness(matchedSkills = [], missingSkills = []) {
-  const setSkills = new Set(matchedSkills.map((s) => String(s).toLowerCase()));
-  const startupMatch = ["react", "node.js", "docker", "aws", "kubernetes", "sql", "fastapi"].filter((skill) => setSkills.has(skill)).length;
-  const serviceMatch = ["sql", "python", "excel", "data", "analytics", "customer"].filter((skill) => setSkills.has(skill)).length;
-  const productMatch = ["react", "graphql", "cloud", "docker", "kubernetes", "ci/cd"].filter((skill) => setSkills.has(skill)).length;
-  const startupScore = Math.min(100, Math.round((startupMatch / 6) * 100));
-  const serviceScore = Math.min(100, Math.round((serviceMatch / 6) * 100));
-  const productScore = Math.min(100, Math.round((productMatch / 6) * 100));
-
-  return [
-    { label: "Startup", score: startupScore },
-    { label: "Service-Based", score: serviceScore },
-    { label: "Product-Based", score: productScore },
-  ];
-}
 
 function ProgressIndicator({ label, value, accent = "from-blue-500 to-cyan-500" }) {
   return (
@@ -90,14 +42,35 @@ function SummaryCard({ title, subtitle, value, badge }) {
   );
 }
 
-export default function CareerAnalytics() {
+function buildIndustryReadiness(matchedSkills = [], missingSkills = []) {
+  const setSkills = new Set(matchedSkills.map((s) => String(s).toLowerCase()));
+  const startupMatch = ["react", "node.js", "docker", "aws", "kubernetes", "sql", "fastapi"].filter((skill) => setSkills.has(skill)).length;
+  const serviceMatch = ["sql", "python", "excel", "data", "analytics", "customer"].filter((skill) => setSkills.has(skill)).length;
+  const productMatch = ["react", "graphql", "cloud", "docker", "kubernetes", "ci/cd"].filter((skill) => setSkills.has(skill)).length;
+  const startupScore = Math.min(100, Math.round((startupMatch / 6) * 100));
+  const serviceScore = Math.min(100, Math.round((serviceMatch / 6) * 100));
+  const productScore = Math.min(100, Math.round((productMatch / 6) * 100));
+
+  return [
+    { label: "Startup", score: startupScore },
+    { label: "Service-Based", score: serviceScore },
+    { label: "Product-Based", score: productScore },
+  ];
+}
+
+function CareerAnalyticsComponent() {
   const email = useMemo(() => localStorage.getItem("selectedEmail") || localStorage.getItem("email") || "", []);
+  const token = localStorage.getItem("token") || "";
   const [resumes, setResumes] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [analysis, setAnalysis] = useState(null);
-  const [status, setStatus] = useState({ type: "info", message: "Your analytics dashboard is ready to summarize your current career growth signal." });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({ 
+    type: "info", 
+    message: "Select a resume and job description to generate personalized career analytics." 
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -109,8 +82,22 @@ export default function CareerAnalytics() {
         ]);
         setResumes(resumeRes.data || []);
         setJobs(jobRes.data || []);
+
+        // Auto-select first resume
+        if (resumeRes.data && resumeRes.data.length > 0) {
+          const firstResumeId = resumeRes.data[0].id;
+          setSelectedResumeId(firstResumeId);
+          localStorage.setItem("resume_id", firstResumeId);
+        }
+
+        // Auto-select first job
+        if (jobRes.data && jobRes.data.length > 0) {
+          setSelectedJobId(jobRes.data[0].id);
+          localStorage.setItem("selectedJob", JSON.stringify(jobRes.data[0]));
+        }
       } catch (err) {
         console.error(err);
+        setStatus({ type: "error", message: "Unable to load resumes or jobs" });
       }
     };
 
@@ -119,93 +106,154 @@ export default function CareerAnalytics() {
 
   const runAnalysis = async () => {
     if (!selectedResumeId || !selectedJobId) {
-      setStatus({ type: "error", message: "Please select a resume and job description first." });
+      setStatus({ type: "error", message: "Please select both a resume and a job description." });
       return;
     }
 
+    setLoading(true);
+    setStatus({ type: "info", message: "Calculating your career analytics..." });
+
     try {
-      const response = await axios.post(`${API}/ats/analyze/${selectedResumeId}/${selectedJobId}`);
+      const response = await axios.post(
+        `${API}/api/career-analytics`,
+        {
+          resume_id: parseInt(selectedResumeId),
+          job_description_id: parseInt(selectedJobId),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setAnalysis(response.data);
-      setStatus({ type: "success", message: "Career analytics refreshed successfully." });
+      setStatus({ type: "success", message: "Career analytics generated successfully." });
     } catch (err) {
       console.error(err);
-      setStatus({ type: "error", message: err.response?.data?.detail || "Unable to load analytics." });
+      setStatus({ 
+        type: "error", 
+        message: err.response?.data?.detail || "Unable to generate career analytics." 
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const analytics = analysis?.analytics || {};
-  const topAtsScore = analysis?.ats_score ?? analytics?.ats_score ?? 0;
-  const topMatchPercentage = analysis?.match_percentage ?? analytics?.resume_strength ?? 0;
-  const topProfileCompletion = analytics?.profile_completion ?? 82;
-  const topMatchingSkills = analytics?.matching_skills ?? analysis?.matched_skills?.length ?? 0;
-  const topResumeStrength = analytics?.resume_strength ?? analysis?.match_percentage ?? analysis?.ats_score ?? 0;
-  const topMissingSkills = analysis?.missing_skills || [];
-  const topMatchedSkills = analysis?.matched_skills || analysis?.strengths || [];
+  // Get rounded values from analysis
+  const readiness = analysis?.career_readiness ? Math.round(analysis.career_readiness) : 0;
+  const employability = analysis?.employability ? Math.round(analysis.employability) : 0;
+  const technicalStrength = analysis?.technical_strength ? Math.round(analysis.technical_strength) : 0;
+  const resumeQuality = analysis?.resume_quality ? Math.round(analysis.resume_quality) : 0;
+  const projectStrength = analysis?.career_readiness ? Math.round(analysis.career_readiness * 0.9 + 10) : 0;
+  
+  const strengths = analysis?.top_strengths?.slice(0, 5) || [];
+  const improvements = analysis?.areas_for_improvement?.slice(0, 5) || [];
+  const insights = analysis?.career_insights || "Loading insights...";
+  const targetPath = analysis?.target_role || "Not Available";
+  const salary = "Not Available";
+  
+  const industryReadiness = analysis ? [
+    { label: "Startup", score: Math.round((readiness * 0.9) + 10) },
+    { label: "Service-Based", score: Math.round(readiness) },
+    { label: "Product-Based", score: Math.round((readiness * 0.85) + 15) },
+  ] : [];
+  
+  const actionPlan = analysis?.action_plan || { immediate: [], shortTerm: [], longTerm: [] };
 
-  const readiness = Math.round((topAtsScore * 0.4 + topProfileCompletion * 0.3 + topResumeStrength * 0.3));
-  const employability = Math.round(topAtsScore * 0.45 + topProfileCompletion * 0.35 + (analysis?.resume_improvement?.resume_health_score ?? topResumeStrength) * 0.2);
-  const technicalStrength = Math.min(100, Math.round(topMatchingSkills * 8 + topResumeStrength * 0.2));
-  const resumeQuality = analysis?.resume_improvement?.resume_health_score ?? topResumeStrength;
-  const projectStrength = analysis?.resume_improvement?.project_score ?? Math.min(100, Math.round(topMatchPercentage * 0.8 + 20));
-  const experienceLevel = deriveExperienceLevel(topResumeStrength);
-  const strengths = Array.isArray(analysis?.matched_skills) ? analysis.matched_skills.slice(0, 5) : topMatchedSkills.slice(0, 5);
-  const improvements = Array.isArray(analysis?.missing_skills) ? analysis.missing_skills.slice(0, 5) : [];
-  const insights = analysis?.resume_improvement?.improved_summary || analysis?.suggestions?.slice(0, 2).join(" ") || "This career profile is positioned to improve ATS alignment with targeted skills and practical project evidence.";
-  const targetPath = analysis?.career_recommendations?.[0]?.title || analysis?.career_paths?.[0] || analysis?.job_recommendations?.[0]?.title || "Recommended career path not available";
-  const salary = getSalaryRange(analysis);
-  const industryReadiness = buildIndustryReadiness(topMatchedSkills, topMissingSkills);
-  const actionPlan = analysis ? {
-    immediate: [
-      `Update your resume with ${strengths.slice(0, 2).join(" and ") || "your strongest skills"} highlights and align bullets to the target role.`,
-      `Incorporate ${topMissingSkills.slice(0, 3).join(", ") || "additional relevant keywords"} from the job description.`,
-    ],
-    shortTerm: [
-      `Complete top recommended courses such as ${analysis.course_recommendations?.slice(0, 2).map((course) => course.title).join(" and ") || "role-focused learning"}.`,
-      `Build or refine a project that demonstrates ${topMissingSkills[0] || "high-priority technical skills"}.`,
-    ],
-    longTerm: [
-      `Work toward a role like ${targetPath} by strengthening your project portfolio and certifications.`,
-      `Aim for cross-functional experience in product delivery, cloud, or data-driven workflows to grow industry readiness.`,
-    ],
-  } : { immediate: [], shortTerm: [], longTerm: [] };
+  const buildRoadmapComponent = () => {
+    if (!analysis?.career_roadmap || analysis.career_roadmap.length === 0) {
+      return <p className="text-slate-600">No roadmap available yet.</p>;
+    }
+    
+    return (
+      <div className="space-y-3">
+        {analysis.career_roadmap.map((level, idx) => (
+          <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+            <p className="text-sm font-semibold text-slate-600">{level.level}</p>
+            <p className="text-lg font-bold text-slate-900">{level.role}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
-    <InsightLayout title="Career Analytics" subtitle="Generate AI-powered career insights from your existing ATS, resume, and recommendation outputs.">
+    <InsightLayout 
+      title="Career Analytics" 
+      subtitle="Comprehensive AI-powered analysis of your career growth and readiness metrics."
+    >
       <div className="rounded-3xl bg-white p-6 shadow">
         <ModuleAnalysisControls
           resumes={resumes}
           jobs={jobs}
           selectedResumeId={selectedResumeId}
           selectedJobId={selectedJobId}
-          onResumeChange={(e) => setSelectedResumeId(e.target.value)}
-          onJobChange={(e) => setSelectedJobId(e.target.value)}
+          onResumeChange={(e) => {
+            setSelectedResumeId(e.target.value);
+            setAnalysis(null);
+          }}
+          onJobChange={(e) => {
+            setSelectedJobId(e.target.value);
+            setAnalysis(null);
+          }}
           onRun={runAnalysis}
-          loading={false}
-          buttonLabel="Refresh Career Analytics"
+          loading={loading}
+          buttonLabel="Generate Career Analytics"
           status={status}
         />
 
         {analysis ? (
           <div className="mt-8 space-y-8">
+            {/* Core Metrics */}
             <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <SummaryCard title="Career Readiness" value={`${readiness}%`} subtitle="Overall readiness across ATS, resume and profile" badge="AI Score" />
-                <SummaryCard title="Employability" value={`${employability}%`} subtitle="Assessment of job-fit and role readiness" badge="Market Signal" />
-                <SummaryCard title="Technical Strength" value={`${technicalStrength}%`} subtitle="Matched technical skills and resume strength" badge="Skills" />
-                <SummaryCard title="Resume Quality" value={`${resumeQuality}%`} subtitle="Resume health and keyword fit" badge="Quality" />
+                <SummaryCard 
+                  title="Career Readiness" 
+                  value={`${readiness}%`} 
+                  subtitle="Overall readiness across resume, skills, and profile" 
+                  badge="Dynamic" 
+                />
+                <SummaryCard 
+                  title="Employability" 
+                  value={`${employability}%`} 
+                  subtitle="Assessment of job-fit and role readiness" 
+                  badge="Market Signal" 
+                />
+                <SummaryCard 
+                  title="Technical Strength" 
+                  value={`${technicalStrength}%`} 
+                  subtitle="Matched technical skills and depth" 
+                  badge="Skills" 
+                />
+                <SummaryCard 
+                  title="Resume Quality" 
+                  value={`${resumeQuality}%`} 
+                  subtitle="Resume completeness and optimization" 
+                  badge="Quality" 
+                />
               </div>
 
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-slate-800">Career Profile Snapshot</h3>
                 <div className="mt-6 space-y-4">
-                  <StatPill title="Experience Level" value={experienceLevel} />
                   <StatPill title="Target Role" value={targetPath} />
-                  <StatPill title="Estimated Salary" value={salary} />
-                  <StatPill title="Best Matching Path" value={targetPath} />
+                  <StatPill title="Best Path" value={analysis?.best_matching_path || "Not Available"} />
+                  <StatPill title="Salary Range" value={salary} />
+                  <StatPill 
+                    title="Experience Level" 
+                    value={
+                      technicalStrength >= 85 ? "Senior-Level" :
+                      technicalStrength >= 70 ? "Mid-Level" :
+                      technicalStrength >= 50 ? "Associate-Level" :
+                      "Entry-Level"
+                    } 
+                  />
                 </div>
               </div>
             </div>
 
+            {/* Insights and Analysis */}
             <div className="grid gap-6 xl:grid-cols-[0.72fr_0.28fr]">
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-slate-900">AI Career Insights</h3>
@@ -221,38 +269,51 @@ export default function CareerAnalytics() {
                 <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-slate-900">Top Strengths</h3>
                   <ul className="mt-4 space-y-2 text-sm text-slate-600">
-                    {strengths.length ? strengths.map((skill) => <li key={skill}>• {skill}</li>) : <li>No strengths found yet.</li>}
+                    {strengths.length ? strengths.map((skill, idx) => <li key={idx}>• {skill}</li>) : <li>No strengths found yet.</li>}
                   </ul>
                 </div>
                 <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-slate-900">Areas for Improvement</h3>
                   <ul className="mt-4 space-y-2 text-sm text-slate-600">
-                    {improvements.length ? improvements.map((skill) => <li key={skill}>• {skill}</li>) : <li>No gaps detected yet.</li>}
+                    {improvements.length ? improvements.map((skill, idx) => <li key={idx}>• {skill}</li>) : <li>No gaps detected yet.</li>}
                   </ul>
                 </div>
               </div>
             </div>
 
+            {/* Action Plan */}
             <div className="grid gap-6 xl:grid-cols-[0.75fr_0.25fr]">
               <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-slate-900">Personalized Action Plan</h3>
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
                   <div>
-                    <p className="text-sm font-semibold text-slate-700">Immediate</p>
+                    <p className="text-sm font-semibold text-slate-700">Immediate (1-2 weeks)</p>
                     <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                      {actionPlan.immediate.map((item) => <li key={item}>• {item}</li>)}
+                      {actionPlan.immediate && actionPlan.immediate.length > 0 ? (
+                        actionPlan.immediate.map((item, idx) => <li key={idx}>• {item}</li>)
+                      ) : (
+                        <li>Focus on skill development</li>
+                      )}
                     </ul>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-700">Short-Term</p>
+                    <p className="text-sm font-semibold text-slate-700">Short-Term (1-3 months)</p>
                     <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                      {actionPlan.shortTerm.map((item) => <li key={item}>• {item}</li>)}
+                      {actionPlan.short_term && actionPlan.short_term.length > 0 ? (
+                        actionPlan.short_term.map((item, idx) => <li key={idx}>• {item}</li>)
+                      ) : (
+                        <li>Complete courses and projects</li>
+                      )}
                     </ul>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-700">Long-Term</p>
+                    <p className="text-sm font-semibold text-slate-700">Long-Term (3-12 months)</p>
                     <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                      {actionPlan.longTerm.map((item) => <li key={item}>• {item}</li>)}
+                      {actionPlan.long_term && actionPlan.long_term.length > 0 ? (
+                        actionPlan.long_term.map((item, idx) => <li key={idx}>• {item}</li>)
+                      ) : (
+                        <li>Build experience and network</li>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -275,36 +336,47 @@ export default function CareerAnalytics() {
               </div>
             </div>
 
+            {/* Roadmap and Recommendations */}
             <div className="grid gap-6 xl:grid-cols-2">
               <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-slate-900">Career Growth Roadmap</h3>
                 <div className="mt-5">
                   <ErrorBoundary>
-                    <CareerRoadmap analysis={analysis} />
+                    {buildRoadmapComponent()}
                   </ErrorBoundary>
                 </div>
               </div>
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-slate-900">Recommendation Coverage</h3>
+                <h3 className="text-xl font-semibold text-slate-900">Quick Stats</h3>
                 <div className="mt-5 grid gap-4">
                   <div className="rounded-2xl bg-white p-4 border border-slate-200">
-                    <p className="text-sm font-semibold text-slate-700">Top Career Path</p>
-                    <p className="mt-2 text-lg font-bold text-slate-900">{targetPath}</p>
+                    <p className="text-sm font-semibold text-slate-700">Matched Skills</p>
+                    <p className="mt-2 text-lg font-bold text-slate-900">{analysis?.matched_skills?.length || 0}</p>
                   </div>
                   <div className="rounded-2xl bg-white p-4 border border-slate-200">
-                    <p className="text-sm font-semibold text-slate-700">Salary Range</p>
-                    <p className="mt-2 text-lg font-bold text-slate-900">{salary}</p>
+                    <p className="text-sm font-semibold text-slate-700">Skill Gaps</p>
+                    <p className="mt-2 text-lg font-bold text-slate-900">{analysis?.missing_skills?.length || 0}</p>
                   </div>
                   <div className="rounded-2xl bg-white p-4 border border-slate-200">
-                    <p className="text-sm font-semibold text-slate-700">AI Insights</p>
-                    <p className="mt-2 text-sm text-slate-600">{analysis.resume_improvement?.weak_sections?.[0] || "Review your resume summary and project evidence for stronger storytelling."}</p>
+                    <p className="text-sm font-semibold text-slate-700">Recommended Courses</p>
+                    <p className="mt-2 text-lg font-bold text-slate-900">{analysis?.recommended_courses?.length || 0}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div className="mt-8 rounded-2xl bg-slate-50 border border-slate-200 p-8 text-center">
+            <p className="text-slate-600 text-lg">
+              {selectedResumeId && selectedJobId 
+                ? "Click 'Generate Career Analytics' to see your personalized analysis." 
+                : "Select a resume and job description to get started."}
+            </p>
+          </div>
+        )}
       </div>
     </InsightLayout>
   );
 }
+
+export default CareerAnalyticsComponent;

@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 
 import bcrypt
 from docx import Document as DocxDocument
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi import Body, Depends, FastAPI, File, Form, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -94,6 +94,19 @@ def get_current_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 
     return user
+
+
+def get_email_from_token(credentials: Optional[HTTPAuthorizationCredentials]) -> Optional[str]:
+    """Extract email from JWT token without database lookup"""
+    if credentials is None or not credentials.credentials:
+        return None
+
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        email = payload.get("sub") or payload.get("email")
+        return email
+    except JWTError:
+        return None
 
 
 def require_admin_user(current_user: models.User = Depends(get_current_user)) -> models.User:
@@ -993,6 +1006,61 @@ def get_admin_user_details(
     }
 
 
+@app.post("/api/admin/users")
+def create_admin_user(
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    name = str(payload.get("name") or "").strip()
+    email = str(payload.get("email") or "").strip().lower()
+    password = str(payload.get("password") or "").strip()
+    role = str(payload.get("role") or "USER").strip().upper()
+
+    if not name or not email or not password:
+        raise HTTPException(status_code=400, detail="Name, email, and password are required")
+    if db.query(models.User).filter(models.User.email == email).first():
+        raise HTTPException(status_code=400, detail="User with this email already exists")
+
+    user = models.User(
+        name=name,
+        email=email,
+        password=bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode(),
+        role=role or "USER",
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return {"message": "User created successfully", "id": user.id, "user": {"id": user.id, "name": user.name, "email": user.email, "role": user.role or "USER"}}
+
+
+@app.put("/api/admin/users/{user_id}")
+def update_admin_user(
+    user_id: int,
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if payload.get("name") is not None:
+        user.name = str(payload["name"]).strip() or user.name
+    if payload.get("email") is not None:
+        new_email = str(payload["email"]).strip().lower()
+        if new_email and new_email != user.email and db.query(models.User).filter(models.User.email == new_email).first():
+            raise HTTPException(status_code=400, detail="User with this email already exists")
+        user.email = new_email or user.email
+    if payload.get("role") is not None:
+        user.role = str(payload["role"]).strip().upper() or user.role
+    if payload.get("password") is not None and str(payload["password"]).strip():
+        user.password = bcrypt.hashpw(str(payload["password"]).strip().encode(), bcrypt.gensalt()).decode()
+
+    db.commit()
+    return {"message": "User updated successfully", "id": user.id, "user": {"id": user.id, "name": user.name, "email": user.email, "role": user.role or "USER"}}
+
+
 @app.patch("/api/admin/users/{user_id}/status")
 def update_admin_user_status(
     user_id: int,
@@ -1038,7 +1106,9 @@ def delete_admin_user(
             db.commit()
             return {"message": "User soft-deleted successfully"}
 
-    raise HTTPException(status_code=400, detail="Safe deletion is not supported by the current schema; use deactivation when available")
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
 
 
 @app.get("/api/admin/profiles")
@@ -1155,6 +1225,84 @@ def get_admin_profile_details(
     }
 
 
+@app.post("/api/admin/profiles")
+def create_admin_profile(
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    email = str(payload.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=400, detail="Profile email is required")
+
+    existing = db.query(models.Profile).filter(models.Profile.email == email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Profile for this email already exists")
+
+    profile = models.Profile(
+        fullname=str(payload.get("fullname") or "").strip() or email,
+        email=email,
+        headline=str(payload.get("headline") or "").strip(),
+        location=str(payload.get("location") or "").strip(),
+        about=str(payload.get("about") or "").strip(),
+        contact_info=json.dumps(payload.get("contact_info") or {}),
+        education=json.dumps(payload.get("education") or []),
+        skills=json.dumps(payload.get("skills") or []),
+        projects=json.dumps(payload.get("projects") or []),
+        certifications=json.dumps(payload.get("certifications") or []),
+        experience=json.dumps(payload.get("experience") or []),
+        completion_percentage=int(payload.get("completion_percentage") or 0),
+    )
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+    return {"message": "Profile created successfully", "id": profile.id, "profile": {"id": profile.id, "email": profile.email, "fullname": profile.fullname, "headline": profile.headline, "location": profile.location}}
+
+
+@app.put("/api/admin/profiles/{profile_id}")
+def update_admin_profile(
+    profile_id: int,
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    profile = db.query(models.Profile).filter(models.Profile.id == profile_id).first()
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    for field in ["fullname", "email", "headline", "location", "about", "phone", "linkedin", "github", "portfolio", "college", "degree", "branch", "cgpa", "graduation"]:
+        if field in payload and payload.get(field) is not None:
+            setattr(profile, field, str(payload[field]).strip())
+
+    for field in ["contact_info", "education", "skills", "projects", "certifications", "experience", "social_links", "preferences", "career_interest", "completion_suggestions"]:
+        if field in payload:
+            value = payload.get(field)
+            setattr(profile, field, json.dumps(value) if value is not None else None)
+
+    if "completion_percentage" in payload and payload.get("completion_percentage") is not None:
+        profile.completion_percentage = int(payload["completion_percentage"])
+
+    if payload.get("email") is not None:
+        profile.email = str(payload["email"]).strip().lower()
+
+    db.commit()
+    return {"message": "Profile updated successfully", "id": profile.id}
+
+
+@app.delete("/api/admin/profiles/{profile_id}")
+def delete_admin_profile(
+    profile_id: int,
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    profile = db.query(models.Profile).filter(models.Profile.id == profile_id).first()
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    db.delete(profile)
+    db.commit()
+    return {"message": "Profile deleted successfully"}
+
+
 @app.get("/api/admin/resumes")
 def get_admin_resumes(
     search: str = "",
@@ -1229,6 +1377,92 @@ def get_admin_resumes(
         "total": total,
         "total_pages": max((total + page_size - 1) // page_size, 1) if total else 1,
     }
+
+
+@app.post("/api/admin/resumes")
+def create_admin_resume(
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    user_email = str(payload.get("user_email") or "").strip().lower()
+    filename = str(payload.get("filename") or "").strip() or "resume.txt"
+    content = str(payload.get("content") or "").strip()
+    if not user_email:
+        raise HTTPException(status_code=400, detail="User email is required")
+
+    resume = models.Resume(
+        user_email=user_email,
+        filename=filename,
+        content=content,
+        stored_path=f"admin_uploads/{filename}",
+        parsed_name=str(payload.get("parsed_name") or "").strip() or "",
+        parsed_email=str(payload.get("parsed_email") or "").strip() or user_email,
+        parsed_phone=str(payload.get("parsed_phone") or "").strip() or "",
+        parsed_skills=json.dumps(payload.get("parsed_skills") or []),
+        parsed_college=str(payload.get("parsed_college") or "").strip() or "",
+        parsed_degree=str(payload.get("parsed_degree") or "").strip() or "",
+        parsed_experience=str(payload.get("parsed_experience") or "").strip() or "",
+        parsed_certifications=json.dumps(payload.get("parsed_certifications") or []),
+        parsed_projects=json.dumps(payload.get("parsed_projects") or []),
+        parsed_summary=str(payload.get("parsed_summary") or "").strip() or content,
+    )
+    db.add(resume)
+    db.commit()
+    db.refresh(resume)
+    return {"message": "Resume created successfully", "id": resume.id, "resume": {"id": resume.id, "filename": resume.filename, "user_email": resume.user_email}}
+
+
+@app.put("/api/admin/resumes/{resume_id}")
+def update_admin_resume(
+    resume_id: int,
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+    if resume is None:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    if payload.get("user_email") is not None:
+        resume.user_email = str(payload["user_email"]).strip().lower()
+    if payload.get("filename") is not None:
+        resume.filename = str(payload["filename"]).strip() or resume.filename
+    if payload.get("content") is not None:
+        resume.content = str(payload["content"]).strip()
+    if payload.get("parsed_name") is not None:
+        resume.parsed_name = str(payload["parsed_name"]).strip()
+    if payload.get("parsed_email") is not None:
+        resume.parsed_email = str(payload["parsed_email"]).strip()
+    if payload.get("parsed_phone") is not None:
+        resume.parsed_phone = str(payload["parsed_phone"]).strip()
+    if payload.get("parsed_summary") is not None:
+        resume.parsed_summary = str(payload["parsed_summary"]).strip()
+    if payload.get("parsed_skills") is not None:
+        resume.parsed_skills = json.dumps(payload["parsed_skills"])
+    if payload.get("parsed_college") is not None:
+        resume.parsed_college = str(payload["parsed_college"]).strip()
+    if payload.get("parsed_degree") is not None:
+        resume.parsed_degree = str(payload["parsed_degree"]).strip()
+    if payload.get("parsed_experience") is not None:
+        resume.parsed_experience = str(payload["parsed_experience"]).strip()
+
+    db.commit()
+    return {"message": "Resume updated successfully", "id": resume.id}
+
+
+@app.delete("/api/admin/resumes/{resume_id}")
+def delete_admin_resume(
+    resume_id: int,
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+    if resume is None:
+        raise HTTPException(status_code=404, detail="Resume not found")
+    db.delete(resume)
+    db.commit()
+    return {"message": "Resume deleted successfully"}
 
 
 @app.get("/api/admin/resumes/{resume_id}")
@@ -2145,8 +2379,12 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     if (db_user.role or "USER").upper() == "ADMIN":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin login required. Please use the admin login page.")
 
+    token = create_access_token(db_user)
+
     return {
         "message": "Login Successful",
+        "access_token": token,
+        "token_type": "bearer",
         "user": db_user.name,
         "email": db_user.email,
         "role": db_user.role or "USER",
@@ -2779,3 +3017,129 @@ def analyze_resume(
     )
 
     return result
+
+
+# ============================================================================
+# DYNAMIC ANALYSIS ENDPOINTS (Part 1, 2, 3 - Dashboard, Recommendations, Analytics)
+# ============================================================================
+
+
+@app.post("/api/dashboard")
+def get_dashboard_data(
+    resume_id: int = Body(...),
+    job_description_id: int = Body(...),
+    db: Session = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Get dynamic dashboard data for authenticated user.
+    Returns Resume Score, Skill Match, Career Paths count, and Courses count.
+    """
+    user_email = get_email_from_token(credentials)
+    
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    try:
+        from career_analysis_service import CareerAnalysisService
+        
+        analysis = CareerAnalysisService.calculate_career_analysis(
+            db, user_email, resume_id, job_description_id
+        )
+        
+        # Format dashboard-specific response
+        return {
+            "resume_score": round(analysis["resume_quality_score"], 1),
+            "skill_match": round(analysis["match_percentage"], 1),
+            "career_paths": len(analysis["career_recommendations"]),
+            "courses": len(analysis["recommended_courses"]),
+            "career_readiness": round(analysis["career_readiness_score"], 1),
+            "employability": round(analysis["employability_score"], 1),
+            "technical_strength": round(analysis["technical_strength_score"], 1),
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+
+@app.post("/api/career-recommendations")
+def get_career_recommendations(
+    resume_id: int = Body(...),
+    job_description_id: int = Body(...),
+    db: Session = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Get personalized career recommendations based on resume + job description.
+    Returns filtered, ranked recommendations with match explanations.
+    """
+    user_email = get_email_from_token(credentials)
+    
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    try:
+        from career_analysis_service import CareerAnalysisService
+        
+        analysis = CareerAnalysisService.calculate_career_analysis(
+            db, user_email, resume_id, job_description_id
+        )
+        
+        return {
+            "target_role": analysis["target_role"],
+            "best_matching_path": analysis["best_matching_path"],
+            "recommendations": analysis["career_recommendations"],
+            "top_strengths": analysis["top_strengths"],
+            "areas_for_improvement": analysis["areas_for_improvement"],
+            "insights": analysis["career_insights"],
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+
+@app.post("/api/career-analytics")
+def get_career_analytics(
+    resume_id: int = Body(...),
+    job_description_id: int = Body(...),
+    db: Session = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Get comprehensive career analytics for authenticated user.
+    Returns all metrics: readiness, employability, technical strength, quality, etc.
+    """
+    user_email = get_email_from_token(credentials)
+    
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    try:
+        from career_analysis_service import CareerAnalysisService
+        
+        analysis = CareerAnalysisService.calculate_career_analysis(
+            db, user_email, resume_id, job_description_id
+        )
+        
+        return {
+            "career_readiness": round(analysis["career_readiness_score"], 1),
+            "employability": round(analysis["employability_score"], 1),
+            "technical_strength": round(analysis["technical_strength_score"], 1),
+            "resume_quality": round(analysis["resume_quality_score"], 1),
+            "target_role": analysis["target_role"],
+            "best_matching_path": analysis["best_matching_path"],
+            "top_strengths": analysis["top_strengths"][:5],
+            "areas_for_improvement": analysis["areas_for_improvement"][:5],
+            "action_plan": analysis["action_plan"],
+            "career_roadmap": analysis["career_roadmap"],
+            "career_insights": analysis["career_insights"],
+            "recommended_courses": analysis["recommended_courses"],
+            "matched_skills": analysis["matched_skills"],
+            "missing_skills": analysis["missing_skills"],
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")

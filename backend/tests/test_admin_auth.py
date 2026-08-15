@@ -71,6 +71,45 @@ class AdminAuthTests(unittest.TestCase):
         response = self.client.get("/api/admin/me")
         self.assertEqual(response.status_code, 401)
 
+    def test_career_recommendations_accepts_json_body(self):
+        self.client.post(
+            "/register",
+            json={"name": "Recommendation User", "email": "recommendation@example.com", "password": "secret123"},
+        )
+
+        resume = self.client.post(
+            "/resume/upload",
+            files={"file": ("resume.txt", b"Name: Recommendation User\nSkills: Python, FastAPI, SQL\nExperience: Backend Engineer\n", "text/plain")},
+            data={"email": "recommendation@example.com"},
+        )
+        self.assertEqual(resume.status_code, 200)
+
+        job = self.client.post(
+            "/job-description",
+            json={
+                "user_email": "recommendation@example.com",
+                "job_title": "Python Developer",
+                "company_name": "ExampleCorp",
+                "description": "Python FastAPI SQL backend engineering role",
+            },
+        )
+        self.assertEqual(job.status_code, 200)
+
+        login = self.client.post(
+            "/login",
+            json={"email": "recommendation@example.com", "password": "secret123"},
+        )
+        self.assertEqual(login.status_code, 200)
+
+        response = self.client.post(
+            "/api/career-recommendations",
+            json={"resume_id": 1, "job_description_id": 1},
+            headers={"Authorization": f"Bearer {login.json()['access_token']}"},
+        )
+
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertIn("recommendations", response.json())
+
     def test_admin_dashboard_stats_endpoint(self):
         self.client.post(
             "/register",
@@ -244,6 +283,96 @@ class AdminAuthTests(unittest.TestCase):
         job_recs = self.client.get("/api/admin/job-recommendations", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(job_recs.status_code, 200)
         self.assertIn("summary", job_recs.json())
+
+    def test_admin_crud_actions_for_users_profiles_and_resumes(self):
+        db = SessionLocal()
+        try:
+            admin = models.User(
+                name="Crud Admin",
+                email="crud.admin@example.com",
+                password=bcrypt.hashpw("secret123".encode(), bcrypt.gensalt()).decode(),
+                role="ADMIN",
+            )
+            db.add(admin)
+            db.commit()
+        finally:
+            db.close()
+
+        login = self.client.post(
+            "/api/admin/login",
+            json={"email": "crud.admin@example.com", "password": "secret123"},
+        )
+        self.assertEqual(login.status_code, 200, login.text)
+        token = login.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        created_user = self.client.post(
+            "/api/admin/users",
+            json={"name": "Crud User", "email": "crud.user@example.com", "password": "secret123", "role": "USER"},
+            headers=headers,
+        )
+        self.assertEqual(created_user.status_code, 200, created_user.text)
+        user_id = created_user.json()["id"]
+
+        update_user = self.client.put(
+            f"/api/admin/users/{user_id}",
+            json={"name": "Updated Crud User", "role": "ADMIN"},
+            headers=headers,
+        )
+        self.assertEqual(update_user.status_code, 200, update_user.text)
+
+        created_profile = self.client.post(
+            "/api/admin/profiles",
+            json={
+                "email": "crud.user@example.com",
+                "fullname": "Updated Crud User",
+                "headline": "Product Analyst",
+                "location": "Bengaluru",
+                "about": "Experience in product analytics",
+                "skills": ["SQL", "Python"],
+                "experience": [{"company": "ACME", "designation": "Analyst"}],
+                "education": [{"institution": "IIM", "degree": "MBA"}],
+            },
+            headers=headers,
+        )
+        self.assertEqual(created_profile.status_code, 200, created_profile.text)
+        profile_id = created_profile.json()["id"]
+
+        update_profile = self.client.put(
+            f"/api/admin/profiles/{profile_id}",
+            json={"headline": "Senior Product Analyst", "location": "Hyderabad"},
+            headers=headers,
+        )
+        self.assertEqual(update_profile.status_code, 200, update_profile.text)
+
+        created_resume = self.client.post(
+            "/api/admin/resumes",
+            json={
+                "user_email": "crud.user@example.com",
+                "filename": "crud_resume.txt",
+                "content": "Python, SQL, product analytics experience",
+                "parsed_skills": ["Python", "SQL"],
+            },
+            headers=headers,
+        )
+        self.assertEqual(created_resume.status_code, 200, created_resume.text)
+        resume_id = created_resume.json()["id"]
+
+        update_resume = self.client.put(
+            f"/api/admin/resumes/{resume_id}",
+            json={"filename": "updated_crud_resume.txt"},
+            headers=headers,
+        )
+        self.assertEqual(update_resume.status_code, 200, update_resume.text)
+
+        delete_resume = self.client.delete(f"/api/admin/resumes/{resume_id}", headers=headers)
+        self.assertEqual(delete_resume.status_code, 200, delete_resume.text)
+
+        delete_profile = self.client.delete(f"/api/admin/profiles/{profile_id}", headers=headers)
+        self.assertEqual(delete_profile.status_code, 200, delete_profile.text)
+
+        delete_user = self.client.delete(f"/api/admin/users/{user_id}", headers=headers)
+        self.assertEqual(delete_user.status_code, 200, delete_user.text)
 
     def test_admin_credentials_cannot_be_used_on_regular_login(self):
         db = SessionLocal()
