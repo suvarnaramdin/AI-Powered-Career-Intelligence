@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import InsightLayout from "../components/InsightLayout";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://127.0.0.1:8000";
+const API = API_BASE_URL;
 
 const PORTAL_MAP = {
   linkedin: "https://www.linkedin.com/jobs/search/?keywords=",

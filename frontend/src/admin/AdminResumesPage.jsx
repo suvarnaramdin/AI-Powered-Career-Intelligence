@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { FaSearch, FaChevronLeft, FaChevronRight, FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { API_BASE_URL } from "../config/api";
 import { adminFetch, getAdminToken } from "./adminAuth";
 
-const ADMIN_API = "http://127.0.0.1:8000";
+const ADMIN_API = API_BASE_URL;
 
 function useDebouncedValue(value, delay = 350) {
   const [debounced, setDebounced] = useState(value);

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import bcrypt
+from dotenv import load_dotenv
 from docx import Document as DocxDocument
 from fastapi import Body, Depends, FastAPI, File, Form, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +18,8 @@ from jose import JWTError, jwt
 from pypdf import PdfReader
 from sqlalchemy import func, inspect, or_, text
 from sqlalchemy.orm import Session
+
+load_dotenv()
 
 # Add parent directory to path to allow imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -33,22 +36,38 @@ ensure_resume_columns()
 
 app = FastAPI()
 security = HTTPBearer(auto_error=False)
-JWT_SECRET = os.getenv("JWT_SECRET", "career-intelligence-admin-secret-change-me")
+
+
+def _get_env_value(*keys: str, default: Optional[str] = None) -> Optional[str]:
+    for key in keys:
+        value = os.getenv(key)
+        if value not in (None, ""):
+            return value
+    return default
+
+
+JWT_SECRET = _get_env_value("JWT_SECRET_KEY", "JWT_SECRET", "SECRET_KEY", default="career-intelligence-admin-secret-change-me")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRES_MINUTES = int(os.getenv("JWT_EXPIRES_MINUTES", "60"))
 RESERVED_ADMIN_EMAIL = "admin@example.com"
 
-UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
-UPLOAD_DIR.mkdir(exist_ok=True)
+UPLOAD_DIR = Path(_get_env_value("UPLOAD_DIR", default=str(Path(__file__).resolve().parent / "uploads")))
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+allowed_origins = []
+for origin in _get_env_value("CORS_ORIGINS", default="http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174").split(","):
+    cleaned = origin.strip()
+    if cleaned:
+        allowed_origins.append(cleaned)
+
+frontend_url = _get_env_value("FRONTEND_URL")
+if frontend_url and frontend_url not in allowed_origins:
+    allowed_origins.append(frontend_url.strip())
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-    ],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,6 +80,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 
 def create_access_token(user: models.User) -> str:

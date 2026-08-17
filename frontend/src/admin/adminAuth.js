@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "../config/api";
+
 const ADMIN_STORAGE_KEY = "admin_session";
-const ADMIN_API = "http://127.0.0.1:8000";
+const ADMIN_API = API_BASE_URL;
 
 export const getAdminSession = () => {
   const raw = localStorage.getItem(ADMIN_STORAGE_KEY);

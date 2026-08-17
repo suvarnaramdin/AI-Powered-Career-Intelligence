@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaFileUpload, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
-const API = "http://127.0.0.1:8000";
+import { API_BASE_URL } from "../config/api";
+
+const API = API_BASE_URL;
 
 export default function Resume() {
   const navigate = useNavigate();

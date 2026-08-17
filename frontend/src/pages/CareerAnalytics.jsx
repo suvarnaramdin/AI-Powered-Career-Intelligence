@@ -3,8 +3,9 @@ import axios from "axios";
 import InsightLayout from "../components/InsightLayout";
 import ModuleAnalysisControls from "../components/ModuleAnalysisControls";
 import ErrorBoundary from "../components/ErrorBoundary";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://127.0.0.1:8000";
+const API = API_BASE_URL;
 
 function ProgressIndicator({ label, value, accent = "from-blue-500 to-cyan-500" }) {
   return (

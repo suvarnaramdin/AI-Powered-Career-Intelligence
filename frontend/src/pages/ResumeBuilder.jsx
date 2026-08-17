@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import axios from "axios";
 import InsightLayout from "../components/InsightLayout";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://127.0.0.1:8000";
+const API = API_BASE_URL;
 
 function safeText(value) {
   if (Array.isArray(value)) return value.join(", ");

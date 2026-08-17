@@ -24,8 +24,9 @@ import {
   FaFire,
   FaLightbulb,
 } from "react-icons/fa";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://127.0.0.1:8000";
+const API = API_BASE_URL;
 
 export default function CareerInsightsDashboard() {
   const navigate = useNavigate();

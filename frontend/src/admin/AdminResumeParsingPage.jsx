@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaChartBar, FaExclamationTriangle } from "react-icons/fa";
+import { API_BASE_URL } from "../config/api";
 import { getAdminToken } from "./adminAuth";
 
-const ADMIN_API = "http://127.0.0.1:8000";
+const ADMIN_API = API_BASE_URL;
 
 export default function AdminResumeParsingPage() {
   const [data, setData] = useState({ stats: {}, recent_activity: [], failed_parsing: [] });

@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
-const API = "http://127.0.0.1:8000";
+import { API_BASE_URL } from "../config/api";
+
+const API = API_BASE_URL;
 
 const blankProfile = {
   fullname: "",

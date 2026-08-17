@@ -3,6 +3,7 @@ Script to initialize the admin user in the database.
 Run this once to create the admin account.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -42,8 +43,11 @@ if admin_exists:
     db.close()
     sys.exit(0)
 
-# Hash the admin password
-admin_password = "AdminPassword123"
+# Hash the admin password from environment configuration; do not hardcode a production secret.
+admin_password = os.getenv("ADMIN_PASSWORD")
+if not admin_password:
+    raise RuntimeError("ADMIN_PASSWORD environment variable must be set before initializing the admin account.")
+
 hashed_password = bcrypt.hashpw(admin_password.encode(), bcrypt.gensalt()).decode()
 
 # Create admin user
@@ -60,7 +64,6 @@ try:
     db.refresh(admin_user)
     print("✓ Admin user created successfully!")
     print(f"  Email: {admin_user.email}")
-    print(f"  Password: {admin_password}")
     print(f"  Name: {admin_user.name}")
     print(f"  Role: {admin_user.role}")
     print("\nAdmin can now login at: /admin/login")
