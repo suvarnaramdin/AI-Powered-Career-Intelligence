@@ -2808,14 +2808,36 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
             print("DATABASE ERROR:", e)
             raise
 
-        analysis_result = None
-        if job_id is not None:
+        analysis_result = {
+            "resume_skills": [],
+            "job_skills": [],
+            "matched_skills": [],
+            "missing_skills": [],
+            "ats_score": 0,
+            "match_percentage": 0,
+            "strengths": [],
+            "suggestions": [],
+            "career_paths": [],
+            "learning_resources": [],
+            "expected_salary": "",
+            "recommended_projects": [],
+            "skill_gap_percentage": 0,
+            "skill_gap_items": [],
+            "career_recommendations": [],
+            "job_recommendations": [],
+            "course_recommendations": [],
+            "resume_improvement": {},
+            "analytics": {},
+        }
+        if job_id is not None and job_id > 0:
             try:
                 job = db.query(models.JobDescription).filter(models.JobDescription.id == job_id).first()
                 if job:
-                    analysis_result = compare_resume_job(text, job.description)
-            except Exception:
-                analysis_result = None
+                    result = compare_resume_job(text, job.description)
+                    if result:
+                        analysis_result.update(result)
+            except Exception as e:
+                print("JOB ANALYSIS ERROR:", e)
 
         return {
             "message": "Resume uploaded and parsed successfully",
@@ -2833,24 +2855,6 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
                 "summary": parsed_data["summary"],
             },
             "file_path": str(file_path),
-            "resume": {
-                "id": resume.id,
-                "user_email": resume.user_email,
-                "filename": resume.filename,
-                "stored_path": resume.stored_path,
-                "content": resume.content,
-                "parsed_name": resume.parsed_name,
-                "parsed_email": resume.parsed_email,
-                "parsed_phone": resume.parsed_phone,
-                "parsed_skills": resume.parsed_skills,
-                "parsed_college": resume.parsed_college,
-                "parsed_degree": resume.parsed_degree,
-                "parsed_experience": resume.parsed_experience,
-                "parsed_certifications": resume.parsed_certifications,
-                "parsed_projects": resume.parsed_projects,
-                "parsed_summary": resume.parsed_summary,
-                "uploaded_at": resume.uploaded_at.isoformat() if resume.uploaded_at else "",
-            },
             "analysis": analysis_result,
         }
     except Exception as e:
@@ -2860,6 +2864,7 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
             status_code=500,
             detail=f"Resume upload failed: {str(e)}",
         )
+
 
 
 @app.get("/resume/{resume_id}/download")
