@@ -23,6 +23,41 @@ class CareerAnalysisService:
     """
 
     @staticmethod
+    def _resolve_user_resources(db: Session, user_email: str, resume_id: int, job_description_id: int):
+        """Resolve valid resume/job for the current user, falling back to the latest owned resources when ids are stale or invalid."""
+        resume = db.query(models.Resume).filter(
+            models.Resume.id == resume_id,
+            models.Resume.user_email == user_email,
+        ).first()
+
+        job = db.query(models.JobDescription).filter(
+            models.JobDescription.id == job_description_id,
+            models.JobDescription.user_email == user_email,
+        ).first()
+
+        if resume and job:
+            return resume, job
+
+        if not resume:
+            latest_resume = db.query(models.Resume).filter(
+                models.Resume.user_email == user_email,
+            ).order_by(models.Resume.id.desc()).first()
+            if latest_resume:
+                resume = latest_resume
+
+        if not job:
+            latest_job = db.query(models.JobDescription).filter(
+                models.JobDescription.user_email == user_email,
+            ).order_by(models.JobDescription.id.desc()).first()
+            if latest_job:
+                job = latest_job
+
+        if not resume or not job:
+            raise ValueError("Resume or Job Description not found or not owned by user")
+
+        return resume, job
+
+    @staticmethod
     def calculate_career_analysis(
         db: Session,
         user_email: str,
@@ -45,19 +80,14 @@ class CareerAnalysisService:
         if cached and not force_recalculate:
             return CareerAnalysisService._format_analysis_response(cached)
 
-        # Fetch resume and job
-        resume = db.query(models.Resume).filter(
-            models.Resume.id == resume_id,
-            models.Resume.user_email == user_email,
-        ).first()
-
-        job = db.query(models.JobDescription).filter(
-            models.JobDescription.id == job_description_id,
-            models.JobDescription.user_email == user_email,
-        ).first()
-
-        if not resume or not job:
-            raise ValueError("Resume or Job Description not found or not owned by user")
+        # Fetch resume and job for the current user. If the supplied ids are stale or invalid,
+        # fall back to the latest valid resources owned by this user instead of rejecting the request.
+        resume, job = CareerAnalysisService._resolve_user_resources(
+            db,
+            user_email,
+            resume_id,
+            job_description_id,
+        )
 
         # Perform analysis
         base_analysis = compare_resume_job(resume.content, job.description)

@@ -5,10 +5,11 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 
 # ============================================================
-# AIVEN MYSQL CONFIGURATION
+# DATABASE CONFIGURATION
 # ============================================================
 
 DB_HOST = os.getenv(
@@ -32,49 +33,36 @@ DB_USER = os.getenv(
 )
 
 DB_PASSWORD = os.getenv("DB_PASSWORD")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-
-# ============================================================
-# CHECK PASSWORD
-# ============================================================
-
-if not DB_PASSWORD:
-    raise RuntimeError(
-        "DB_PASSWORD is not set. "
-        "Add DB_PASSWORD to Render Environment Variables."
-    )
-
-
-# ============================================================
-# ENCODE PASSWORD
-# ============================================================
-
-encoded_password = quote_plus(DB_PASSWORD)
-
-
-# ============================================================
-# DATABASE URL
-# ============================================================
-
-DATABASE_URL = (
-    f"mysql+pymysql://"
-    f"{DB_USER}:{encoded_password}"
-    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+if not DATABASE_URL:
+    if DB_PASSWORD:
+        encoded_password = quote_plus(DB_PASSWORD)
+        DATABASE_URL = (
+            f"mysql+pymysql://"
+            f"{DB_USER}:{encoded_password}"
+            f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        )
+    else:
+        DATABASE_URL = "sqlite:///./career_intelligence.db"
 
 
 # ============================================================
 # SQLALCHEMY ENGINE
 # ============================================================
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=280,
-    connect_args={
-        "ssl": {}
-    }
-)
+engine_kwargs = {
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
+}
+
+if DATABASE_URL.startswith("sqlite"):
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+    engine_kwargs["poolclass"] = StaticPool
+else:
+    engine_kwargs["connect_args"] = {"ssl": {}}
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
 
 
 # ============================================================
@@ -243,14 +231,17 @@ def initialize_database():
 
     print("========================================")
     print("Starting database initialization...")
-    print("Database Host:", DB_HOST)
-    print("Database Port:", DB_PORT)
-    print("Database Name:", DB_NAME)
-    print("Database User:", DB_USER)
+    if DATABASE_URL.startswith("sqlite"):
+        print("Database URL:", DATABASE_URL)
+    else:
+        print("Database Host:", DB_HOST)
+        print("Database Port:", DB_PORT)
+        print("Database Name:", DB_NAME)
+        print("Database User:", DB_USER)
     print("========================================")
 
-    # Test connection first
-    test_database_connection()
+    if not DATABASE_URL.startswith("sqlite"):
+        test_database_connection()
 
     # Create all SQLAlchemy model tables
     Base.metadata.create_all(bind=engine)
@@ -282,7 +273,7 @@ def get_db():
 
 
 # ============================================================
-# RUN DATABASE INITIALIZATION
+# DATABASE INITIALIZATION
 # ============================================================
-
-initialize_database()
+# Initialize after model imports are complete, typically from main.py.
+# This avoids creating tables before SQLAlchemy models are registered.
