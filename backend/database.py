@@ -1,3 +1,5 @@
+# backend/database.py
+
 import os
 from typing import Generator
 
@@ -35,7 +37,7 @@ engine = create_engine(
 
 
 # ============================================================
-# SESSION
+# DATABASE SESSION
 # ============================================================
 
 SessionLocal = sessionmaker(
@@ -46,7 +48,7 @@ SessionLocal = sessionmaker(
 
 
 # ============================================================
-# BASE
+# SQLALCHEMY BASE
 # ============================================================
 
 Base = declarative_base()
@@ -103,3 +105,101 @@ def get_database_info():
         "database_type": "MySQL",
         "driver": "PyMySQL",
     }
+
+
+# ============================================================
+# EXISTING DATABASE COMPATIBILITY FUNCTIONS
+# ============================================================
+#
+# These functions are imported by main.py.
+#
+# IMPORTANT:
+# They do NOT drop tables or delete existing data.
+# They only verify that the expected tables/columns exist.
+#
+# ============================================================
+
+def ensure_user_columns():
+    """
+    Verify the users table exists.
+
+    Existing application schema is preserved.
+    No destructive changes are performed here.
+    """
+
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(
+                text("SHOW TABLES LIKE 'users'")
+            )
+
+            if result.fetchone():
+                print("✅ Users table verified")
+                return True
+
+            print("⚠️ Users table was not found")
+            return False
+
+    except Exception as e:
+        print(f"⚠️ User table verification failed: {e}")
+        return False
+
+
+def ensure_profile_columns():
+    """
+    Verify the profile table exists.
+
+    This intentionally does not automatically alter the
+    production schema.
+    """
+
+    try:
+        with engine.connect() as connection:
+
+            # Try common profile table names used by the project.
+            for table_name in ("profiles", "profile", "user_profiles"):
+
+                result = connection.execute(
+                    text(f"SHOW TABLES LIKE '{table_name}'")
+                )
+
+                if result.fetchone():
+                    print(f"✅ Profile table verified: {table_name}")
+                    return True
+
+            print("⚠️ Profile table was not found")
+            return False
+
+    except Exception as e:
+        print(f"⚠️ Profile table verification failed: {e}")
+        return False
+
+
+def ensure_resume_columns():
+    """
+    Verify the resume table exists.
+
+    This intentionally does not automatically alter the
+    production schema.
+    """
+
+    try:
+        with engine.connect() as connection:
+
+            # Try common resume table names used by the project.
+            for table_name in ("resumes", "resume", "user_resumes"):
+
+                result = connection.execute(
+                    text(f"SHOW TABLES LIKE '{table_name}'")
+                )
+
+                if result.fetchone():
+                    print(f"✅ Resume table verified: {table_name}")
+                    return True
+
+            print("⚠️ Resume table was not found")
+            return False
+
+    except Exception as e:
+        print(f"⚠️ Resume table verification failed: {e}")
+        return False
