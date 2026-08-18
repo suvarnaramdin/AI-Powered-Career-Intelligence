@@ -2758,100 +2758,108 @@ def change_password(payload: schemas.PasswordChangeRequest, db: Session = Depend
 
 @app.post("/resume/upload", response_model=schemas.ResumeUploadResponse)
 def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: Optional[int] = Form(None), db: Session = Depends(get_db)):
-    if not email:
-        raise HTTPException(status_code=400, detail="Email is required")
-
-    safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", file.filename or "resume")
-    file_path = UPLOAD_DIR / f"{email.replace('@', '_at_')}_{safe_name}"
-
-    contents = file.file.read()
-    file_path.write_bytes(contents)
-
-    text = extract_text_from_file(contents, safe_name)
-    parsed_data = parse_resume_text(text)
-
-    if not parsed_data["email"]:
-        parsed_data["email"] = email
-
-    resume = models.Resume(
-        user_email=email,
-        filename=safe_name,
-        stored_path=str(file_path),
-        content=text,
-        parsed_name=parsed_data["name"],
-        parsed_email=parsed_data["email"],
-        parsed_phone=parsed_data["phone"],
-        parsed_skills=parsed_data["skills"],
-        parsed_college=parsed_data["college"],
-        parsed_degree=parsed_data["degree"],
-        parsed_experience=parsed_data["experience"],
-        parsed_certifications=parsed_data["certifications"],
-        parsed_projects=parsed_data["projects"],
-        parsed_summary=parsed_data["summary"],
-    )
-
     try:
-        db.add(resume)
-        db.commit()
-        db.refresh(resume)
+        if not email:
+            raise HTTPException(status_code=400, detail="Email is required")
 
-        print("=" * 50)
-        print("Resume saved successfully")
-        print("ID:", resume.id)
-        print("Email:", resume.user_email)
-        print("Filename:", resume.filename)
-        print("=" * 50)
+        safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", file.filename or "resume")
+        file_path = UPLOAD_DIR / f"{email.replace('@', '_at_')}_{safe_name}"
 
-    except Exception as e:
-        db.rollback()
-        print("DATABASE ERROR:", e)
-        raise
+        contents = file.file.read()
+        file_path.write_bytes(contents)
 
-    analysis_result = None
-    if job_id is not None:
+        text = extract_text_from_file(contents, safe_name)
+        parsed_data = parse_resume_text(text)
+
+        if not parsed_data["email"]:
+            parsed_data["email"] = email
+
+        resume = models.Resume(
+            user_email=email,
+            filename=safe_name,
+            stored_path=str(file_path),
+            content=text,
+            parsed_name=parsed_data["name"],
+            parsed_email=parsed_data["email"],
+            parsed_phone=parsed_data["phone"],
+            parsed_skills=parsed_data["skills"],
+            parsed_college=parsed_data["college"],
+            parsed_degree=parsed_data["degree"],
+            parsed_experience=parsed_data["experience"],
+            parsed_certifications=parsed_data["certifications"],
+            parsed_projects=parsed_data["projects"],
+            parsed_summary=parsed_data["summary"],
+        )
+
         try:
-            job = db.query(models.JobDescription).filter(models.JobDescription.id == job_id).first()
-            if job:
-                analysis_result = compare_resume_job(text, job.description)
-        except Exception:
-            analysis_result = None
+            db.add(resume)
+            db.commit()
+            db.refresh(resume)
 
-    return {
-        "message": "Resume uploaded and parsed successfully",
-        "resume_id": resume.id,
-        "parsed_data": {
-            "name": parsed_data["name"],
-            "email": parsed_data["email"],
-            "phone": parsed_data["phone"],
-            "skills": parsed_data["skills"],
-            "college": parsed_data["college"],
-            "degree": parsed_data["degree"],
-            "experience": parsed_data["experience"],
-            "certifications": parsed_data["certifications"],
-            "projects": parsed_data["projects"],
-            "summary": parsed_data["summary"],
-        },
-        "file_path": str(file_path),
-        "resume": {
-            "id": resume.id,
-            "user_email": resume.user_email,
-            "filename": resume.filename,
-            "stored_path": resume.stored_path,
-            "content": resume.content,
-            "parsed_name": resume.parsed_name,
-            "parsed_email": resume.parsed_email,
-            "parsed_phone": resume.parsed_phone,
-            "parsed_skills": resume.parsed_skills,
-            "parsed_college": resume.parsed_college,
-            "parsed_degree": resume.parsed_degree,
-            "parsed_experience": resume.parsed_experience,
-            "parsed_certifications": resume.parsed_certifications,
-            "parsed_projects": resume.parsed_projects,
-            "parsed_summary": resume.parsed_summary,
-            "uploaded_at": resume.uploaded_at.isoformat() if resume.uploaded_at else "",
-        },
-        "analysis": analysis_result,
-    }
+            print("=" * 50)
+            print("Resume saved successfully")
+            print("ID:", resume.id)
+            print("Email:", resume.user_email)
+            print("Filename:", resume.filename)
+            print("=" * 50)
+
+        except Exception as e:
+            db.rollback()
+            print("DATABASE ERROR:", e)
+            raise
+
+        analysis_result = None
+        if job_id is not None:
+            try:
+                job = db.query(models.JobDescription).filter(models.JobDescription.id == job_id).first()
+                if job:
+                    analysis_result = compare_resume_job(text, job.description)
+            except Exception:
+                analysis_result = None
+
+        return {
+            "message": "Resume uploaded and parsed successfully",
+            "resume_id": resume.id,
+            "parsed_data": {
+                "name": parsed_data["name"],
+                "email": parsed_data["email"],
+                "phone": parsed_data["phone"],
+                "skills": parsed_data["skills"],
+                "college": parsed_data["college"],
+                "degree": parsed_data["degree"],
+                "experience": parsed_data["experience"],
+                "certifications": parsed_data["certifications"],
+                "projects": parsed_data["projects"],
+                "summary": parsed_data["summary"],
+            },
+            "file_path": str(file_path),
+            "resume": {
+                "id": resume.id,
+                "user_email": resume.user_email,
+                "filename": resume.filename,
+                "stored_path": resume.stored_path,
+                "content": resume.content,
+                "parsed_name": resume.parsed_name,
+                "parsed_email": resume.parsed_email,
+                "parsed_phone": resume.parsed_phone,
+                "parsed_skills": resume.parsed_skills,
+                "parsed_college": resume.parsed_college,
+                "parsed_degree": resume.parsed_degree,
+                "parsed_experience": resume.parsed_experience,
+                "parsed_certifications": resume.parsed_certifications,
+                "parsed_projects": resume.parsed_projects,
+                "parsed_summary": resume.parsed_summary,
+                "uploaded_at": resume.uploaded_at.isoformat() if resume.uploaded_at else "",
+            },
+            "analysis": analysis_result,
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Resume upload failed: {str(e)}",
+        )
 
 
 @app.get("/resume/{resume_id}/download")
