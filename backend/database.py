@@ -1,106 +1,36 @@
-
-
 import os
-from urllib.parse import parse_qsl, quote_plus, urlencode, urlparse, urlunparse
+from typing import Generator
 
-from sqlalchemy import create_engine, inspect, text
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.pool import StaticPool
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
+
+load_dotenv()
 
 
 # ============================================================
-# AIVEN MYSQL CONFIGURATION
+# DATABASE CONFIGURATION
 # ============================================================
 
-DB_HOST = os.getenv(
-    "DB_HOST",
-    "mysql-34f42d66-ramdinsuvarna10-1663.j.aivencloud.com"
-)
-
-DB_PORT = os.getenv(
-    "DB_PORT",
-    "15306"
-)
-
-DB_NAME = os.getenv(
-    "DB_NAME",
-    "defaultdb"
-)
-
-DB_USER = os.getenv(
-    "DB_USER",
-    "avnadmin"
-)
-
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-
-
-def _normalize_database_url(url: str) -> str:
-    if not url:
-        return url
-
-    try:
-        parsed = urlparse(url)
-    except Exception:
-        return url
-
-    scheme = parsed.scheme.lower()
-    if not scheme.startswith("mysql"):
-        return url
-
-    if "mysqlconnector" in scheme or "mysqlclient" in scheme:
-        scheme = "mysql+pymysql"
-    elif scheme == "mysql":
-        scheme = "mysql+pymysql"
-
-    query_dict = dict(parse_qsl(parsed.query, keep_blank_values=True))
-    cleaned_query = {}
-    for key, value in query_dict.items():
-        normalized_key = key.lower()
-        if normalized_key in {"ssl_mode", "ssl-mode"}:
-            continue
-        cleaned_query[key] = value
-
-    if "ssl" not in {key.lower() for key in cleaned_query}:
-        cleaned_query["ssl"] = "true"
-
-    normalized = urlunparse(parsed._replace(scheme=scheme, query=urlencode(cleaned_query, doseq=True)))
-    return normalized
-
-
-DATABASE_URL = _normalize_database_url(os.getenv("DATABASE_URL"))
-
-if not DATABASE_URL and DB_PASSWORD:
-    encoded_password = quote_plus(DB_PASSWORD)
-    DATABASE_URL = (
-        f"mysql+pymysql://"
-        f"{DB_USER}:{encoded_password}"
-        f"@{DB_HOST}:{DB_PORT}/{DB_NAME}?ssl=true"
-    )
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    fallback_db_path = Path(__file__).resolve().parent / "internship_db"
-    DATABASE_URL = f"sqlite:///{fallback_db_path}"
+    raise RuntimeError(
+        "DATABASE_URL environment variable is not configured."
+    )
 
 
 # ============================================================
-# SQLALCHEMY ENGINE
+# DATABASE ENGINE
 # ============================================================
-
-engine_kwargs = {
-    "pool_pre_ping": True,
-    "pool_recycle": 280,
-}
-
-if DATABASE_URL.startswith("sqlite"):
-    engine_kwargs["connect_args"] = {"check_same_thread": False}
-    engine_kwargs["poolclass"] = StaticPool
-else:
-    engine_kwargs["connect_args"] = {}
 
 engine = create_engine(
     DATABASE_URL,
-    **engine_kwargs
+    pool_pre_ping=True,
+    pool_recycle=280,
+    pool_size=5,
+    max_overflow=10,
+    echo=False,
 )
 
 
@@ -109,9 +39,9 @@ engine = create_engine(
 # ============================================================
 
 SessionLocal = sessionmaker(
+    bind=engine,
     autocommit=False,
     autoflush=False,
-    bind=engine
 )
 
 
@@ -123,16 +53,32 @@ Base = declarative_base()
 
 
 # ============================================================
+# FASTAPI DATABASE DEPENDENCY
+# ============================================================
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+
+    try:
+        yield db
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+
+
+# ============================================================
 # DATABASE CONNECTION TEST
 # ============================================================
 
-def test_database_connection():
+def test_database_connection() -> bool:
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
 
         print("========================================")
-        print("Successfully connected to Aiven MySQL")
+        print("Aiven MySQL connection successful")
         print("========================================")
 
         return True
@@ -143,173 +89,17 @@ def test_database_connection():
         print(f"Error: {e}")
         print("========================================")
 
-        raise
+        return False
 
 
 # ============================================================
-# ENSURE COLUMNS
+# DATABASE INFORMATION
 # ============================================================
 
-def ensure_columns(table_name, column_definitions):
-    """
-    Check whether required columns exist.
-    Add missing columns automatically.
-    """
-
-    inspector = inspect(engine)
-
-    if not inspector.has_table(table_name):
-        Base.metadata.create_all(bind=engine)
-        return
-
-    existing_columns = {
-        column["name"]
-        for column in inspector.get_columns(table_name)
+def get_database_info():
+    return {
+        "database_configured": bool(DATABASE_URL),
+        "database_name": "defaultdb",
+        "database_type": "MySQL",
+        "driver": "PyMySQL",
     }
-
-    for column_name, definition in column_definitions.items():
-
-        if column_name not in existing_columns:
-
-            with engine.begin() as conn:
-
-                conn.execute(
-                    text(
-                        f"ALTER TABLE `{table_name}` "
-                        f"ADD COLUMN `{column_name}` {definition}"
-                    )
-                )
-
-            print(
-                f"Added missing column "
-                f"{table_name}.{column_name}"
-            )
-
-
-# ============================================================
-# PROFILE TABLE
-# ============================================================
-
-def ensure_profile_columns():
-
-    ensure_columns(
-        "profile",
-        {
-            "headline": "VARCHAR(255)",
-            "location": "VARCHAR(255)",
-            "about": "TEXT",
-            "contact_info": "TEXT",
-            "education": "TEXT",
-            "projects": "TEXT",
-            "social_links": "TEXT",
-            "preferences": "TEXT",
-            "profile_picture": "VARCHAR(500)",
-            "banner_image": "VARCHAR(500)",
-            "completion_percentage": "INT",
-            "completion_suggestions": "TEXT",
-            "experience": "TEXT",
-        }
-    )
-
-
-# ============================================================
-# USERS TABLE
-# ============================================================
-
-def ensure_user_columns():
-
-    ensure_columns(
-        "users",
-        {
-            "role": "VARCHAR(20) DEFAULT 'USER'",
-        }
-    )
-
-
-# ============================================================
-# RESUMES TABLE
-# ============================================================
-
-def ensure_resume_columns():
-
-    ensure_columns(
-        "resumes",
-        {
-            "user_email": "VARCHAR(100)",
-            "stored_path": "VARCHAR(500)",
-            "content": "TEXT",
-            "parsed_name": "VARCHAR(100)",
-            "parsed_email": "VARCHAR(100)",
-            "parsed_phone": "VARCHAR(20)",
-            "parsed_skills": "TEXT",
-            "parsed_college": "VARCHAR(255)",
-            "parsed_degree": "VARCHAR(100)",
-            "parsed_experience": "TEXT",
-            "parsed_certifications": "TEXT",
-            "parsed_projects": "TEXT",
-            "parsed_summary": "TEXT",
-            "uploaded_at": "DATETIME",
-        }
-    )
-
-
-# ============================================================
-# JOB DESCRIPTION TABLE
-# ============================================================
-
-def ensure_job_description_table():
-
-    Base.metadata.create_all(bind=engine)
-
-
-# ============================================================
-# INITIALIZE DATABASE
-# ============================================================
-
-def initialize_database():
-
-    print("========================================")
-    print("Starting database initialization...")
-    print("Database Host:", DB_HOST)
-    print("Database Port:", DB_PORT)
-    print("Database Name:", DB_NAME)
-    print("Database User:", DB_USER)
-    print("========================================")
-
-    # Test connection first
-    test_database_connection()
-
-    # Create all SQLAlchemy model tables
-    Base.metadata.create_all(bind=engine)
-
-    # Add required columns
-    ensure_profile_columns()
-    ensure_user_columns()
-    ensure_resume_columns()
-    ensure_job_description_table()
-
-    print("========================================")
-    print("Database initialization completed")
-    print("========================================")
-
-
-# ============================================================
-# DATABASE DEPENDENCY
-# ============================================================
-
-def get_db():
-
-    db = SessionLocal()
-
-    try:
-        yield db
-
-    finally:
-        db.close()
-
-
-# ============================================================
-# RUN DATABASE INITIALIZATION
-# ============================================================
-
-initialize_database()
