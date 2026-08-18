@@ -4,11 +4,51 @@ import { adminFetch } from "./adminAuth";
 
 const formatNumber = (value) => (typeof value === "number" ? value.toLocaleString() : "0");
 
-const buildBarChartData = (items, maxValue) =>
-  items.map((item) => ({
-    ...item,
-    height: maxValue > 0 ? Math.max((Number(item.value || 0) / maxValue) * 100, 8) : 0,
+const buildTrendChartData = (items) => {
+  const normalized = (items || []).map((item) => ({
+    label: item?.label ?? "",
+    value: Number(item?.value || 0),
   }));
+
+  if (!normalized.length) return [];
+
+  const maxValue = Math.max(...normalized.map((item) => item.value), 1);
+  const width = 500;
+  const height = 220;
+  const paddingX = 28;
+  const paddingY = 20;
+  const chartWidth = width - paddingX * 2;
+  const chartHeight = height - paddingY * 2;
+
+  return normalized.map((item, index) => {
+    const xRatio = normalized.length === 1 ? 0.5 : index / (normalized.length - 1);
+    const x = paddingX + xRatio * chartWidth;
+    const yRatio = maxValue === 0 ? 0 : item.value / maxValue;
+    const y = height - paddingY - yRatio * chartHeight;
+
+    return {
+      ...item,
+      x,
+      y,
+      width,
+      height,
+    };
+  });
+};
+
+const buildAreaPath = (points) => {
+  if (!points.length) return "";
+
+  if (points.length === 1) {
+    const point = points[0];
+    return `M ${point.x} ${point.y} L ${point.x} ${point.y}`;
+  }
+
+  const line = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+  const first = points[0];
+  const last = points[points.length - 1];
+  return `${line} L ${last.x} ${points[0].y + 150} L ${first.x} ${points[0].y + 150} Z`;
+};
 
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
@@ -49,17 +89,8 @@ export default function AdminDashboard() {
     [stats]
   );
 
-  const userChart = useMemo(() => {
-    const items = data?.userAnalytics || [];
-    const maxValue = Math.max(...items.map((entry) => Number(entry.value || 0)), 1);
-    return buildBarChartData(items.slice(-10), maxValue);
-  }, [data]);
-
-  const resumeChart = useMemo(() => {
-    const items = data?.resumeAnalytics || [];
-    const maxValue = Math.max(...items.map((entry) => Number(entry.value || 0)), 1);
-    return buildBarChartData(items.slice(-10), maxValue);
-  }, [data]);
+  const userChart = useMemo(() => buildTrendChartData((data?.userAnalytics || []).slice(-10)), [data]);
+  const resumeChart = useMemo(() => buildTrendChartData((data?.resumeAnalytics || []).slice(-10)), [data]);
 
   const skillList = data?.skillAnalytics?.topUserSkills || [];
   const jobRoles = data?.jobAnalytics?.roles || [];
@@ -125,13 +156,20 @@ export default function AdminDashboard() {
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Last 10 buckets</span>
               </div>
               {userChart.length ? (
-                <div className="flex h-52 items-end gap-2">
-                  {userChart.map((entry) => (
-                    <div key={`${entry.label}-${entry.value}`} className="flex flex-1 flex-col items-center gap-2">
-                      <div className="w-full rounded-t-xl bg-blue-600" style={{ height: `${entry.height}%` }} title={`${entry.label}: ${entry.value}`} />
-                      <span className="text-[10px] text-slate-500">{String(entry.label).slice(5)}</span>
-                    </div>
-                  ))}
+                <div className="rounded-2xl bg-slate-50 p-3">
+                  <svg viewBox="0 0 500 220" className="h-52 w-full" role="img" aria-label="User registration activity chart">
+                    {[0, 1, 2, 3].map((line) => (
+                      <line key={line} x1="28" y1={20 + line * 50} x2="472" y2={20 + line * 50} stroke="#dbeafe" strokeWidth="1" />
+                    ))}
+                    <path d={buildAreaPath(userChart)} fill="rgba(59, 130, 246, 0.18)" />
+                    <path d={userChart.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ")} fill="none" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    {userChart.map((point) => (
+                      <g key={`${point.label}-${point.value}`}>
+                        <circle cx={point.x} cy={point.y} r="5" fill="#2563eb" />
+                        <text x={point.x} y="210" textAnchor="middle" fontSize="10" fill="#475569">{String(point.label).slice(5)}</text>
+                      </g>
+                    ))}
+                  </svg>
                 </div>
               ) : (
                 <div className="flex h-52 items-center justify-center text-sm text-slate-500">No user data available yet.</div>
@@ -144,13 +182,20 @@ export default function AdminDashboard() {
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Last 10 buckets</span>
               </div>
               {resumeChart.length ? (
-                <div className="flex h-52 items-end gap-2">
-                  {resumeChart.map((entry) => (
-                    <div key={`${entry.label}-${entry.value}`} className="flex flex-1 flex-col items-center gap-2">
-                      <div className="w-full rounded-t-xl bg-cyan-600" style={{ height: `${entry.height}%` }} title={`${entry.label}: ${entry.value}`} />
-                      <span className="text-[10px] text-slate-500">{String(entry.label).slice(5)}</span>
-                    </div>
-                  ))}
+                <div className="rounded-2xl bg-slate-50 p-3">
+                  <svg viewBox="0 0 500 220" className="h-52 w-full" role="img" aria-label="Resume upload activity chart">
+                    {[0, 1, 2, 3].map((line) => (
+                      <line key={line} x1="28" y1={20 + line * 50} x2="472" y2={20 + line * 50} stroke="#cffafe" strokeWidth="1" />
+                    ))}
+                    <path d={buildAreaPath(resumeChart)} fill="rgba(6, 182, 212, 0.18)" />
+                    <path d={resumeChart.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ")} fill="none" stroke="#0891b2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    {resumeChart.map((point) => (
+                      <g key={`${point.label}-${point.value}`}>
+                        <circle cx={point.x} cy={point.y} r="5" fill="#0891b2" />
+                        <text x={point.x} y="210" textAnchor="middle" fontSize="10" fill="#475569">{String(point.label).slice(5)}</text>
+                      </g>
+                    ))}
+                  </svg>
                 </div>
               ) : (
                 <div className="flex h-52 items-center justify-center text-sm text-slate-500">No resume activity available yet.</div>

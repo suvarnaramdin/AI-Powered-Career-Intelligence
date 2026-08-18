@@ -194,21 +194,113 @@ def ensure_profile_columns():
 def ensure_resume_columns():
     try:
         with engine.connect() as connection:
+            dialect_name = engine.dialect.name.lower()
 
             for table_name in (
                 "resumes",
                 "resume",
                 "user_resumes"
             ):
-                result = connection.execute(
-                    text(f"SHOW TABLES LIKE '{table_name}'")
-                )
+                if dialect_name == "sqlite":
+                    table_exists = connection.execute(
+                        text("SELECT name FROM sqlite_master WHERE type = 'table' AND name = :table_name"),
+                        {"table_name": table_name},
+                    ).fetchone()
+                else:
+                    table_exists = connection.execute(
+                        text(f"SHOW TABLES LIKE '{table_name}'")
+                    ).fetchone()
 
-                if result.fetchone():
-                    print(
-                        f"✅ Resume table verified: {table_name}"
-                    )
-                    return True
+                if not table_exists:
+                    continue
+
+                print(f"✅ Resume table verified: {table_name}")
+
+                if dialect_name == "sqlite":
+                    existing_columns = {
+                        row[1] for row in connection.execute(text(f"PRAGMA table_info('{table_name}')")).fetchall()
+                    }
+                    required_columns = {
+                        "user_email": "VARCHAR(100)",
+                        "stored_path": "VARCHAR(500)",
+                        "content": "TEXT",
+                        "parsed_name": "VARCHAR(100)",
+                        "parsed_email": "VARCHAR(100)",
+                        "parsed_phone": "VARCHAR(20)",
+                        "parsed_skills": "TEXT",
+                        "parsed_college": "TEXT",
+                        "parsed_degree": "TEXT",
+                        "parsed_experience": "TEXT",
+                        "parsed_certifications": "TEXT",
+                        "parsed_projects": "TEXT",
+                        "parsed_summary": "TEXT",
+                        "uploaded_at": "DATETIME",
+                    }
+
+                    for column_name, column_type in required_columns.items():
+                        if column_name not in existing_columns:
+                            connection.execute(
+                                text(f"ALTER TABLE '{table_name}' ADD COLUMN '{column_name}' {column_type}")
+                            )
+                            print(f"✅ Added {table_name}.{column_name}")
+                else:
+                    existing_columns = {
+                        row[0] for row in connection.execute(
+                            text(
+                                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+                                "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table_name"
+                            ),
+                            {"table_name": table_name},
+                        ).fetchall()
+                    }
+                    required_columns = {
+                        "user_email": "VARCHAR(100)",
+                        "stored_path": "VARCHAR(500)",
+                        "content": "TEXT",
+                        "parsed_name": "VARCHAR(100)",
+                        "parsed_email": "VARCHAR(100)",
+                        "parsed_phone": "VARCHAR(20)",
+                        "parsed_skills": "TEXT",
+                        "parsed_college": "TEXT",
+                        "parsed_degree": "TEXT",
+                        "parsed_experience": "TEXT",
+                        "parsed_certifications": "TEXT",
+                        "parsed_projects": "TEXT",
+                        "parsed_summary": "TEXT",
+                        "uploaded_at": "DATETIME",
+                    }
+                    for column_name, column_type in required_columns.items():
+                        if column_name not in existing_columns:
+                            connection.execute(
+                                text(
+                                    f"ALTER TABLE `{table_name}` "
+                                    f"ADD COLUMN `{column_name}` {column_type}"
+                                )
+                            )
+                            print(f"✅ Added {table_name}.{column_name}")
+
+                    for column_name in ("parsed_college", "parsed_degree"):
+                        result = connection.execute(
+                            text(
+                                "SELECT DATA_TYPE, CHARACTER_MAXIMUM_LENGTH "
+                                "FROM INFORMATION_SCHEMA.COLUMNS "
+                                "WHERE TABLE_SCHEMA = DATABASE() "
+                                "AND TABLE_NAME = :table_name "
+                                "AND COLUMN_NAME = :column_name"
+                            ),
+                            {"table_name": table_name, "column_name": column_name},
+                        )
+                        column_info = result.fetchone()
+                        if column_info and column_info[0] in ("varchar", "char"):
+                            connection.execute(
+                                text(
+                                    f"ALTER TABLE `{table_name}` "
+                                    f"MODIFY COLUMN `{column_name}` TEXT"
+                                )
+                            )
+                            print(f"✅ Fixed {table_name}.{column_name} to TEXT")
+
+                return True
 
             print("⚠️ Resume table not found")
             return False

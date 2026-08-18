@@ -8,10 +8,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 
-from sqlalchemy import inspect, text
+from sqlalchemy import Text, inspect, text
 from sqlalchemy.orm import sessionmaker
 
 import database
+import models
 
 
 class ResumeSchemaTests(unittest.TestCase):
@@ -73,6 +74,17 @@ class ResumeSchemaTests(unittest.TestCase):
                     os.remove(db_path)
                 except PermissionError:
                     pass
+
+    def test_resume_model_uses_text_for_long_education_fields(self):
+        self.assertIsInstance(models.Resume.__table__.c.parsed_college.type, Text)
+        self.assertIsInstance(models.Resume.__table__.c.parsed_degree.type, Text)
+
+        long_education = (
+            "Bachelor of Technology in Computer Science Engineering | "
+            "JNTU Engineering College Manthani | 2023 – Present | CGPA: 8.3 | "
+            "Intermediate (MPC) – 97.8% | 2023 | SSC – GPA: 10.0 | 2021"
+        )
+        self.assertGreater(len(long_education), 100)
 
 
 if __name__ == "__main__":
