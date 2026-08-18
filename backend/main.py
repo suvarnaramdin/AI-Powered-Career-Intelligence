@@ -29,13 +29,35 @@ import schemas
 from ats import COURSE_RECOMMENDATIONS_LIBRARY, build_milestone3_insights, compare_resume_job
 from database import SessionLocal, engine, ensure_profile_columns, ensure_resume_columns, ensure_user_columns
 
-models.Base.metadata.create_all(bind=engine)
-ensure_profile_columns()
-ensure_user_columns()
-ensure_resume_columns()
-
+# Do not crash the app on startup if the production database is temporarily unavailable.
+# Create tables only when the connection is usable, and allow /health to reflect DB status.
 app = FastAPI()
 security = HTTPBearer(auto_error=False)
+
+
+def _safe_initialize_database() -> None:
+    try:
+        print("DATABASE HOST:", os.getenv("DB_HOST") or os.getenv("MYSQL_HOST") or "not-set")
+        print("DATABASE PORT:", os.getenv("DB_PORT") or os.getenv("MYSQL_PORT") or "not-set")
+        print("DATABASE NAME:", os.getenv("DB_NAME") or os.getenv("MYSQL_DATABASE") or "not-set")
+        print("DATABASE USER:", os.getenv("DB_USER") or os.getenv("MYSQL_USER") or "not-set")
+
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+
+        models.Base.metadata.create_all(bind=engine)
+        ensure_profile_columns()
+        ensure_user_columns()
+        ensure_resume_columns()
+        print("DATABASE INITIALIZATION: SUCCESS")
+    except Exception as exc:
+        print("DATABASE INITIALIZATION: FAILED")
+        print(f"DB ERROR: {type(exc).__name__}: {exc}")
+        import traceback
+        traceback.print_exc()
+
+
+_safe_initialize_database()
 
 
 def _get_env_value(*keys: str, default: Optional[str] = None) -> Optional[str]:
@@ -93,7 +115,13 @@ def get_db():
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except Exception as exc:
+        print(f"HEALTH CHECK DATABASE ERROR: {type(exc).__name__}: {exc}")
+        return {"status": "degraded", "database": "disconnected"}
 
 
 def create_access_token(user: models.User) -> str:

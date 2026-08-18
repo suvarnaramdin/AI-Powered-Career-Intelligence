@@ -10,14 +10,18 @@ from sqlalchemy.pool import StaticPool
 
 load_dotenv()
 
-DB_HOST = os.getenv("DB_HOST", "mysql-34f42d66-ramdinsuvarna10-1663.j.aivencloud.com")
-DB_PORT = os.getenv("DB_PORT", "15306")
-DB_NAME = os.getenv("DB_NAME", "defaultdb")
-DB_USER = os.getenv("DB_USER", "avnadmin")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = (os.getenv("DB_HOST") or os.getenv("MYSQL_HOST") or "").strip()
+DB_PORT = (os.getenv("DB_PORT") or os.getenv("MYSQL_PORT") or "").strip()
+DB_NAME = (os.getenv("DB_NAME") or os.getenv("MYSQL_DATABASE") or "").strip()
+DB_USER = (os.getenv("DB_USER") or os.getenv("MYSQL_USER") or "").strip()
+DB_PASSWORD = (os.getenv("DB_PASSWORD") or os.getenv("MYSQL_PASSWORD") or "").strip()
 
 
 def _normalize_database_url(url: str | None) -> str | None:
+    if not url:
+        return url
+
+    url = url.strip()
     if not url:
         return url
 
@@ -41,7 +45,6 @@ def _normalize_database_url(url: str | None) -> str | None:
             continue
         filtered[key] = value
 
-    # Keep MySQL SSL enabled for Aiven while stripping unsupported parameters.
     if "ssl" not in {k.lower() for k in filtered.keys()}:
         filtered["ssl"] = "true"
 
@@ -49,20 +52,28 @@ def _normalize_database_url(url: str | None) -> str | None:
     return normalized
 
 
-DATABASE_URL = _normalize_database_url(os.getenv("DATABASE_URL"))
+def _build_database_url() -> str:
+    database_url = _normalize_database_url(os.getenv("DATABASE_URL"))
+    if database_url:
+        return database_url
 
-if not DATABASE_URL and DB_PASSWORD:
-    encoded_password = quote_plus(DB_PASSWORD)
-    DATABASE_URL = (
-        f"mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}:{DB_PORT}/{DB_NAME}?ssl=true"
-    )
+    if DB_HOST and DB_USER and DB_NAME and DB_PASSWORD:
+        encoded_user = quote_plus(DB_USER)
+        encoded_password = quote_plus(DB_PASSWORD)
+        port = DB_PORT or "3306"
+        return f"mysql+pymysql://{encoded_user}:{encoded_password}@{DB_HOST}:{port}/{DB_NAME}?ssl=true"
 
-if not DATABASE_URL:
     fallback_db_path = Path(__file__).resolve().parent / "internship_db"
-    DATABASE_URL = f"sqlite:///{fallback_db_path}"
+    return f"sqlite:///{fallback_db_path}"
 
 
-engine_kwargs = {"pool_pre_ping": True, "pool_recycle": 280, "echo": False}
+DATABASE_URL = _build_database_url()
+
+engine_kwargs = {
+    "pool_pre_ping": True,
+    "pool_recycle": 1800,
+    "echo": False,
+}
 
 if DATABASE_URL.startswith("sqlite"):
     engine_kwargs["connect_args"] = {"check_same_thread": False}
