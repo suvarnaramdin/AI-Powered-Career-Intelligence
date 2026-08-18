@@ -1,7 +1,7 @@
 
 
 import os
-from urllib.parse import quote_plus
+from urllib.parse import parse_qsl, quote_plus, urlencode, urlparse, urlunparse
 
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -34,14 +34,48 @@ DB_USER = os.getenv(
 
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+
+def _normalize_database_url(url: str) -> str:
+    if not url:
+        return url
+
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return url
+
+    scheme = parsed.scheme.lower()
+    if not scheme.startswith("mysql"):
+        return url
+
+    if "mysqlconnector" in scheme or "mysqlclient" in scheme:
+        scheme = "mysql+pymysql"
+    elif scheme == "mysql":
+        scheme = "mysql+pymysql"
+
+    query_dict = dict(parse_qsl(parsed.query, keep_blank_values=True))
+    cleaned_query = {}
+    for key, value in query_dict.items():
+        normalized_key = key.lower()
+        if normalized_key in {"ssl_mode", "ssl-mode"}:
+            continue
+        cleaned_query[key] = value
+
+    if "ssl" not in {key.lower() for key in cleaned_query}:
+        cleaned_query["ssl"] = "true"
+
+    normalized = urlunparse(parsed._replace(scheme=scheme, query=urlencode(cleaned_query, doseq=True)))
+    return normalized
+
+
+DATABASE_URL = _normalize_database_url(os.getenv("DATABASE_URL"))
 
 if not DATABASE_URL and DB_PASSWORD:
     encoded_password = quote_plus(DB_PASSWORD)
     DATABASE_URL = (
         f"mysql+pymysql://"
         f"{DB_USER}:{encoded_password}"
-        f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        f"@{DB_HOST}:{DB_PORT}/{DB_NAME}?ssl=true"
     )
 
 if not DATABASE_URL:
@@ -62,7 +96,7 @@ if DATABASE_URL.startswith("sqlite"):
     engine_kwargs["connect_args"] = {"check_same_thread": False}
     engine_kwargs["poolclass"] = StaticPool
 else:
-    engine_kwargs["connect_args"] = {"ssl": {}}
+    engine_kwargs["connect_args"] = {}
 
 engine = create_engine(
     DATABASE_URL,
