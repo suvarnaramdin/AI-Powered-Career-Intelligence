@@ -5,6 +5,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 
 # ============================================================
@@ -33,47 +34,39 @@ DB_USER = os.getenv(
 
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# ============================================================
-# CHECK PASSWORD
-# ============================================================
-
-if not DB_PASSWORD:
-    raise RuntimeError(
-        "DB_PASSWORD is not set. "
-        "Add DB_PASSWORD to Render Environment Variables."
+if not DATABASE_URL and DB_PASSWORD:
+    encoded_password = quote_plus(DB_PASSWORD)
+    DATABASE_URL = (
+        f"mysql+pymysql://"
+        f"{DB_USER}:{encoded_password}"
+        f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
 
-
-# ============================================================
-# ENCODE PASSWORD
-# ============================================================
-
-encoded_password = quote_plus(DB_PASSWORD)
-
-
-# ============================================================
-# DATABASE URL
-# ============================================================
-
-DATABASE_URL = (
-    f"mysql+pymysql://"
-    f"{DB_USER}:{encoded_password}"
-    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+if not DATABASE_URL:
+    fallback_db_path = Path(__file__).resolve().parent / "internship_db"
+    DATABASE_URL = f"sqlite:///{fallback_db_path}"
 
 
 # ============================================================
 # SQLALCHEMY ENGINE
 # ============================================================
 
+engine_kwargs = {
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
+}
+
+if DATABASE_URL.startswith("sqlite"):
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+    engine_kwargs["poolclass"] = StaticPool
+else:
+    engine_kwargs["connect_args"] = {"ssl": {}}
+
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=280,
-    connect_args={
-        "ssl": {}
-    }
+    **engine_kwargs
 )
 
 

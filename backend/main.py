@@ -54,8 +54,17 @@ RESERVED_ADMIN_EMAIL = "admin@example.com"
 UPLOAD_DIR = Path(_get_env_value("UPLOAD_DIR", default=str(Path(__file__).resolve().parent / "uploads")))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
+default_cors_origins = (
+    "http://localhost:5173,"
+    "http://127.0.0.1:5173,"
+    "http://localhost:5174,"
+    "http://127.0.0.1:5174,"
+    "https://ai-powered-career-intelligence.vercel.app,"
+    "https://ai-powered-career-intelligence-git-main-r-suvarnas-projects.vercel.app"
+)
+
 allowed_origins = []
-for origin in _get_env_value("CORS_ORIGINS", default="http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174").split(","):
+for origin in _get_env_value("CORS_ORIGINS", default=default_cors_origins).split(","):
     cleaned = origin.strip()
     if cleaned:
         allowed_origins.append(cleaned)
