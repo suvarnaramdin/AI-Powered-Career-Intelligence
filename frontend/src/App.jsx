@@ -21,7 +21,6 @@ import ResumeImprovement from "./pages/ResumeImprovement";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import CareerAnalytics from "./pages/CareerAnalytics";
 import Feedback from "./pages/Feedback";
-import InterviewPreparation from "./pages/InterviewPreparation";
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminLayout from "./admin/AdminLayout";
@@ -44,7 +43,6 @@ import AdminActivityPage from "./admin/AdminActivityPage";
 import AdminSystemPage from "./admin/AdminSystemPage";
 import AdminReportsPage from "./admin/AdminReportsPage";
 import AdminNotificationsPage from "./admin/AdminNotificationsPage";
-import AdminInterviewQuestionsPage from "./admin/AdminInterviewQuestionsPage";
 import AdminPlaceholderPage from "./admin/AdminPlaceholderPage";
 import { ProtectedAdminRoute } from "./admin/adminAuth";
 
@@ -74,7 +72,6 @@ function App() {
         <Route path="/analytics" element={<CareerAnalytics />} />
         <Route path="/career-analytics" element={<CareerAnalytics />} />
         <Route path="/feedback" element={<Feedback />} />
-        <Route path="/interview-preparation" element={<InterviewPreparation />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
@@ -99,7 +96,6 @@ function App() {
         <Route path="/admin/reports" element={<ProtectedAdminRoute><AdminLayout><AdminReportsPage /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="/admin/system" element={<ProtectedAdminRoute><AdminLayout><AdminSystemPage /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="/admin/notifications" element={<ProtectedAdminRoute><AdminLayout><AdminNotificationsPage /></AdminLayout></ProtectedAdminRoute>} />
-        <Route path="/admin/interview-questions" element={<ProtectedAdminRoute><AdminLayout><AdminInterviewQuestionsPage /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="/admin/security" element={<ProtectedAdminRoute><AdminLayout><AdminPlaceholderPage title="Roles & Security" /></AdminLayout></ProtectedAdminRoute>} />
       </Routes>
       </ErrorBoundary>

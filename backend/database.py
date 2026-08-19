@@ -312,33 +312,3 @@ def ensure_resume_columns():
         return False
 
 
-def ensure_interview_columns():
-    """Add fields introduced after the original interview table was deployed."""
-    try:
-        with engine.begin() as connection:
-            dialect_name = engine.dialect.name.lower()
-            if dialect_name == "sqlite":
-                table_exists = connection.execute(
-                    text("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'interview_questions'")
-                ).fetchone()
-                if not table_exists:
-                    return False
-                existing = {row[1] for row in connection.execute(text("PRAGMA table_info('interview_questions')"))}
-            else:
-                table_exists = connection.execute(text("SHOW TABLES LIKE 'interview_questions'"))
-                if not table_exists.fetchone():
-                    return False
-                existing = {row[0] for row in connection.execute(text("SHOW COLUMNS FROM interview_questions"))}
-
-            columns = {
-                "interviewer_expectation": "TEXT NOT NULL DEFAULT ''",
-                "key_points": "TEXT NOT NULL DEFAULT '[]'",
-                "common_mistake": "TEXT NOT NULL DEFAULT ''",
-            }
-            for column_name, column_type in columns.items():
-                if column_name not in existing:
-                    connection.execute(text(f"ALTER TABLE interview_questions ADD COLUMN {column_name} {column_type}"))
-            return True
-    except Exception as exc:
-        print(f"Interview question migration failed: {exc}")
-        return False

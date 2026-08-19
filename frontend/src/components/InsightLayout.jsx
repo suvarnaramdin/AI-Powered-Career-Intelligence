@@ -14,7 +14,6 @@ import {
   FaUserCircle,
   FaPenFancy,
   FaCommentDots,
-  FaUserTie,
 } from "react-icons/fa";
 import { clearUserSession } from "../config/api";
 
@@ -33,7 +32,6 @@ const MODULE_ITEMS = [
   { label: "Resume Builder", path: "/resume-builder", icon: FaPenFancy },
   { label: "Career Analytics", path: "/analytics", icon: FaGraduationCap },
   { label: "Feedback", path: "/feedback", icon: FaCommentDots },
-  { label: "Interview Preparation", path: "/interview-preparation", icon: FaUserTie },
 ];
 
 export default function InsightLayout({ title, subtitle, children, headerAction = null }) {

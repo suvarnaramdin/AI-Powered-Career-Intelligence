@@ -137,28 +137,6 @@ class FeedbackOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
-class InterviewQuestionCreate(BaseModel):
-    category: str
-    subcategory: str = "General"
-    question: str
-    answer: str
-    explanation: str = ""
-    interviewer_expectation: str = ""
-    key_points: str = ""
-    common_mistake: str = ""
-    difficulty: str = "Beginner"
-    tags: str = ""
-    code_example: Optional[str] = None
-    expected_output: Optional[str] = None
-    tips: Optional[str] = None
-    is_active: bool = True
-
-
-class InterviewPracticeCreate(BaseModel):
-    answer_submitted: str = ""
-    completed: bool = False
-
-
 class ParsedResumeData(BaseModel):
     name: str
     email: str

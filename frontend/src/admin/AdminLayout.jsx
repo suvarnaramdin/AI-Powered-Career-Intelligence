@@ -19,7 +19,6 @@ const navItems = [
   { label: "Reports", path: "/admin/reports", icon: FaChartBar },
   { label: "System Monitoring", path: "/admin/system", icon: FaCog },
   { label: "Notifications", path: "/admin/notifications", icon: FaBell },
-  { label: "Interview Questions", path: "/admin/interview-questions", icon: FaClipboardList },
   { label: "Roles & Security", path: "/admin/security", icon: FaShieldAlt },
 ];
 
