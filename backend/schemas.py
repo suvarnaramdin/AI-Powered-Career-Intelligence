@@ -118,6 +118,25 @@ class PasswordChangeRequest(BaseModel):
     new_password: str
 
 
+class FeedbackCreate(BaseModel):
+    rating: int = 5
+    category: str = "General"
+    message: str
+
+
+class FeedbackOut(BaseModel):
+    id: int
+    user_email: str
+    rating: int
+    category: str
+    message: str
+    status: str
+    admin_response: str = ""
+    created_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
 class ParsedResumeData(BaseModel):
     name: str
     email: str

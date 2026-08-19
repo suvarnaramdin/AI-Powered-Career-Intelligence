@@ -107,3 +107,21 @@ class TestUserIsolation:
         ).status_code == 200
         assert self.client.get("/profiles").status_code == 401
         assert self.client.get("/profile-history").status_code == 401
+
+    def test_feedback_is_owned_by_user(self):
+        user_a = self.register_and_login("feedback-a@example.com", "Feedback A")
+        created = self.client.post(
+            "/feedback",
+            headers=user_a,
+            json={"rating": 4, "category": "Product", "message": "Helpful career insights."},
+        )
+        assert created.status_code == 200, created.text
+        assert created.json()["user_email"] == "feedback-a@example.com"
+
+        user_b = self.register_and_login("feedback-b@example.com", "Feedback B")
+        assert self.client.get("/feedback", headers=user_b).json() == []
+        assert self.client.post(
+            "/feedback",
+            headers=user_b,
+            json={"rating": 6, "message": "Invalid rating"},
+        ).status_code == 400

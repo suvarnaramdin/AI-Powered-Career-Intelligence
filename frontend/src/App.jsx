@@ -20,6 +20,7 @@ import CourseRecommendation from "./pages/CourseRecommendation";
 import ResumeImprovement from "./pages/ResumeImprovement";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import CareerAnalytics from "./pages/CareerAnalytics";
+import Feedback from "./pages/Feedback";
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminLayout from "./admin/AdminLayout";
@@ -70,6 +71,7 @@ function App() {
         <Route path="/resume-builder" element={<ResumeBuilder />} />
         <Route path="/analytics" element={<CareerAnalytics />} />
         <Route path="/career-analytics" element={<CareerAnalytics />} />
+        <Route path="/feedback" element={<Feedback />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />

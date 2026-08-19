@@ -65,6 +65,20 @@ class ProfileHistory(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
+class Feedback(Base):
+    __tablename__ = "feedback"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String(100), index=True, nullable=False)
+    rating = Column(Integer, nullable=False, default=5)
+    category = Column(String(50), nullable=False, default="General")
+    message = Column(Text, nullable=False)
+    status = Column(String(20), nullable=False, default="Pending")
+    admin_response = Column(Text, default="")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
 class Resume(Base):
     __tablename__ = "resumes"
 

@@ -584,12 +584,24 @@ def _build_certification_dataset(db: Session, search: str = "", category: str = 
 
 def _build_feedback_dataset(db: Session, search: str = "", rating: Optional[int] = None, status: str = "", page: int = 1, page_size: int = 12):
     items = []
+    for feedback in db.query(models.Feedback).order_by(models.Feedback.created_at.desc()).all():
+        items.append({
+            "id": feedback.id,
+            "user_name": feedback.user_email,
+            "rating": feedback.rating,
+            "category": feedback.category,
+            "message": feedback.message,
+            "date": feedback.created_at.isoformat() if feedback.created_at else datetime.utcnow().isoformat(),
+            "status": feedback.status,
+            "admin_response": feedback.admin_response or "",
+        })
+
     for index, history in enumerate(db.query(models.ProfileHistory).order_by(models.ProfileHistory.created_at.desc()).all(), start=1):
         action = (history.action or "activity").strip()
         if action.lower() not in {"feedback", "review", "rating", "support"}:
             continue
         items.append({
-            "id": index,
+            "id": f"history-{index}",
             "user_name": history.email or "System",
             "rating": 5 if "positive" in (history.details or "").lower() else 3,
             "category": "General",
@@ -1692,6 +1704,34 @@ def get_admin_feedback(
     return _build_feedback_dataset(db, search=search, rating=rating, status=status, page=page, page_size=page_size)
 
 
+@app.patch("/api/admin/feedback/{feedback_id}")
+def update_admin_feedback(
+    feedback_id: int,
+    payload: Dict[str, Any],
+    current_user: models.User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    feedback = db.query(models.Feedback).filter(models.Feedback.id == feedback_id).first()
+    if feedback is None:
+        raise HTTPException(status_code=404, detail="Feedback not found")
+
+    if "status" in payload:
+        next_status = str(payload["status"] or "Pending").strip().title()
+        if next_status not in {"Pending", "Resolved"}:
+            raise HTTPException(status_code=400, detail="Invalid feedback status")
+        feedback.status = next_status
+    if "admin_response" in payload:
+        feedback.admin_response = str(payload["admin_response"] or "").strip()
+
+    db.commit()
+    db.refresh(feedback)
+    return {"message": "Feedback updated successfully", "feedback": {
+        "id": feedback.id,
+        "status": feedback.status,
+        "admin_response": feedback.admin_response or "",
+    }}
+
+
 @app.get("/api/admin/activity")
 def get_admin_activity(
     search: str = "",
@@ -2561,6 +2601,41 @@ def get_profile_completion(email: str, current_user: models.User = Depends(get_c
         "completion_percentage": profile.completion_percentage or 0,
         "completion_suggestions": _deserialize_json(profile.completion_suggestions) if profile.completion_suggestions else [],
     }
+
+
+@app.post("/feedback", response_model=schemas.FeedbackOut)
+def create_feedback(
+    feedback: schemas.FeedbackCreate,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    message = (feedback.message or "").strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="Feedback message is required")
+    if feedback.rating < 1 or feedback.rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+
+    item = models.Feedback(
+        user_email=current_user.email,
+        rating=feedback.rating,
+        category=(feedback.category or "General").strip()[:50] or "General",
+        message=message,
+        status="Pending",
+    )
+    db.add(item)
+    db.commit()
+    db.refresh(item)
+    return item
+
+
+@app.get("/feedback", response_model=List[schemas.FeedbackOut])
+def get_user_feedback(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return db.query(models.Feedback).filter(
+        models.Feedback.user_email == current_user.email
+    ).order_by(models.Feedback.created_at.desc()).all()
 
 
 @app.get("/profile-history")
