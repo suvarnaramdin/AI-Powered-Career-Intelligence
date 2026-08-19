@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 import main
 import models
 from database import SessionLocal
+from seed_interview_questions import make_record, _validate_records
 
 
 class InterviewPreparationTests(unittest.TestCase):
@@ -83,6 +84,36 @@ class InterviewPreparationTests(unittest.TestCase):
         deactivated = self.client.delete(f"/api/admin/interview/questions/{question_id}", headers=admin_headers)
         self.assertEqual(deactivated.status_code, 200)
         self.assertEqual(self.client.get("/api/interview/questions", headers=user).json()["total"], 0)
+
+    def test_seed_content_has_distinct_structured_answers(self):
+        records = [
+            make_record("HR / Behavioral Round", number, topic, "behavioral interviews")
+            for number, topic in enumerate(["Introduction", "Resume", "Hiring", "Strengths", "Weakness"], start=1)
+        ]
+        _validate_records(records)
+        self.assertEqual(len({record["question"] for record in records}), 5)
+        self.assertEqual(len({record["answer"] for record in records}), 5)
+        self.assertTrue(all(record["interviewer_expectation"] for record in records))
+        self.assertTrue(all(record["key_points"] for record in records))
+
+    def test_api_keeps_answer_guidance_with_question_id(self):
+        user = self.register_login("structured@example.com", "Structured User")
+        db = SessionLocal()
+        try:
+            first = models.InterviewQuestion(category="HR / Behavioral Round", subcategory="Introduction", question="Tell me about yourself.", answer="Start with education, relevant skills, and one project.", explanation="Checks communication.", interviewer_expectation="Checks whether the introduction is focused and relevant.", key_points='["education", "skills", "project"]', common_mistake="Repeating every resume detail.", is_active=1)
+            second = models.InterviewQuestion(category="HR / Behavioral Round", subcategory="Motivation", question="Why should we hire you?", answer="Connect your foundation and projects to how you can contribute.", explanation="Checks fit.", interviewer_expectation="Checks value, evidence, and learning ability.", key_points='["skills", "evidence", "learning"]', common_mistake="Only saying you are hardworking.", is_active=1)
+            db.add_all([first, second])
+            db.commit()
+        finally:
+            db.close()
+
+        response = self.client.get("/api/interview/questions?category=HR%20%2F%20Behavioral%20Round&include_answers=true&page_size=50", headers=user)
+        self.assertEqual(response.status_code, 200)
+        items = response.json()["items"]
+        self.assertEqual(len(items), 2)
+        self.assertNotEqual(items[0]["answer"], items[1]["answer"])
+        self.assertEqual(items[0]["key_points"], ["education", "skills", "project"])
+        self.assertEqual(items[1]["interviewer_expectation"], "Checks value, evidence, and learning ability.")
 
 
 if __name__ == "__main__":

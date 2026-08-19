@@ -143,6 +143,9 @@ class InterviewQuestionCreate(BaseModel):
     question: str
     answer: str
     explanation: str = ""
+    interviewer_expectation: str = ""
+    key_points: str = ""
+    common_mistake: str = ""
     difficulty: str = "Beginner"
     tags: str = ""
     code_example: Optional[str] = None

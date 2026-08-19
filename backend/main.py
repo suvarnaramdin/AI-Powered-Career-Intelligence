@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import models
 import schemas
 from ats import COURSE_RECOMMENDATIONS_LIBRARY, build_milestone3_insights, compare_resume_job
-from database import SessionLocal, engine, ensure_profile_columns, ensure_resume_columns, ensure_user_columns
+from database import SessionLocal, engine, ensure_interview_columns, ensure_profile_columns, ensure_resume_columns, ensure_user_columns
 
 # Do not crash the app on startup if the production database is temporarily unavailable.
 # Create tables only when the connection is usable, and allow /health to reflect DB status.
@@ -39,8 +39,6 @@ def _seed_interview_questions_if_needed() -> None:
     try:
         with SessionLocal() as db:
             question_count = db.query(models.InterviewQuestion).count()
-        if question_count >= 750:
-            return
         from seed_interview_questions import seed
         seed()
     except Exception as exc:
@@ -61,6 +59,7 @@ def _safe_initialize_database() -> None:
         ensure_profile_columns()
         ensure_user_columns()
         ensure_resume_columns()
+        ensure_interview_columns()
         _seed_interview_questions_if_needed()
         print("DATABASE INITIALIZATION: SUCCESS")
     except Exception as exc:
@@ -255,6 +254,41 @@ def _serialize_bucket(rows: List[Any]) -> List[dict]:
 
 
 # Interview preparation question bank and user-owned practice APIs.
+def _question_key(value: str) -> str:
+    return " ".join((value or "").casefold().split())
+
+
+def _key_points(value: str) -> List[str]:
+    if not value:
+        return []
+    try:
+        parsed = json.loads(value)
+        if isinstance(parsed, list):
+            return [str(item).strip() for item in parsed if str(item).strip()]
+    except (TypeError, ValueError):
+        pass
+    return [item.strip() for item in re.split(r"[,\n]", value) if item.strip()]
+
+
+def _validate_interview_content(db: Session, values: Dict[str, Any], question_id: Optional[int] = None) -> None:
+    values["interviewer_expectation"] = str(values.get("interviewer_expectation") or values.get("explanation") or "").strip()
+    values["key_points"] = values.get("key_points") or json.dumps(["Answer the question directly", "Use a relevant example"])
+    values["common_mistake"] = str(values.get("common_mistake") or "Giving a vague answer without supporting detail").strip()
+    for field in ("category", "question", "answer", "interviewer_expectation", "common_mistake"):
+        if not str(values.get(field) or "").strip():
+            raise HTTPException(status_code=422, detail=f"{field} is required for quality interview content")
+    if not _key_points(str(values.get("key_points") or "")):
+        raise HTTPException(status_code=422, detail="At least one key point is required")
+    duplicate_query = db.query(models.InterviewQuestion).filter(
+        models.InterviewQuestion.category == values["category"],
+        models.InterviewQuestion.answer == values["answer"],
+    )
+    if question_id is not None:
+        duplicate_query = duplicate_query.filter(models.InterviewQuestion.id != question_id)
+    if duplicate_query.first() is not None:
+        raise HTTPException(status_code=422, detail="This answer is already assigned to another question in this round")
+
+
 def _interview_question_dict(question: models.InterviewQuestion, include_answer: bool = True) -> Dict[str, Any]:
     payload = {
         "id": question.id,
@@ -271,6 +305,9 @@ def _interview_question_dict(question: models.InterviewQuestion, include_answer:
         payload.update({
             "answer": question.answer,
             "explanation": question.explanation or "",
+            "interviewer_expectation": question.interviewer_expectation or question.explanation or "",
+            "key_points": _key_points(question.key_points),
+            "common_mistake": question.common_mistake or "",
             "code_example": question.code_example,
             "expected_output": question.expected_output,
             "tips": question.tips,
@@ -438,8 +475,7 @@ def create_admin_interview_question(payload: schemas.InterviewQuestionCreate, cu
     values = payload.model_dump()
     for field in ("category", "question", "answer"):
         values[field] = str(values[field]).strip()
-        if not values[field]:
-            raise HTTPException(status_code=422, detail=f"{field} is required")
+    _validate_interview_content(db, values)
     if values["difficulty"] not in {"Beginner", "Intermediate", "Advanced"}:
         raise HTTPException(status_code=422, detail="Invalid difficulty")
     values["created_by"] = current_user.id
@@ -457,6 +493,9 @@ def update_admin_interview_question(question_id: int, payload: schemas.Interview
     if item is None:
         raise HTTPException(status_code=404, detail="Interview question not found")
     values = payload.model_dump()
+    for field in ("category", "question", "answer"):
+        values[field] = str(values[field]).strip()
+    _validate_interview_content(db, values, question_id)
     if values["difficulty"] not in {"Beginner", "Intermediate", "Advanced"}:
         raise HTTPException(status_code=422, detail="Invalid difficulty")
     for field, value in values.items():
