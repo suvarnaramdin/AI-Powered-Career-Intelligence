@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaEye, FaSyncAlt, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaEye, FaSyncAlt, FaTrash } from "react-icons/fa";
 import { API_BASE_URL } from "../config/api";
 import { adminFetch, getAdminToken } from "./adminAuth";
 
@@ -27,9 +27,6 @@ export default function AdminUsersPage() {
   const [total, setTotal] = useState(0);
   const [selectedUser, setSelectedUser] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "USER" });
-  const [submitting, setSubmitting] = useState(false);
   const debouncedSearch = useDebouncedValue(search, 350);
 
   const loadUsers = async () => {
@@ -97,51 +94,6 @@ export default function AdminUsersPage() {
 
   const totalPages = useMemo(() => Math.max(Math.ceil(total / pageSize), 1), [total, pageSize]);
   const showingText = total ? `Showing ${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} users` : "Showing 0 users";
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!form.name.trim() || !form.email.trim()) {
-      setError("Name and email are required.");
-      return;
-    }
-
-    setSubmitting(true);
-    setError("");
-
-    try {
-      const body = { ...form };
-      if (!editingId && !body.password.trim()) {
-        setError("Password is required for a new user.");
-        return;
-      }
-      body.role = body.role || "USER";
-
-      if (editingId) {
-        await adminFetch(`/api/admin/users/${editingId}`, { method: "PUT", body: JSON.stringify(body) });
-      } else {
-        await adminFetch("/api/admin/users", { method: "POST", body: JSON.stringify(body) });
-      }
-
-      setForm({ name: "", email: "", password: "", role: "USER" });
-      setEditingId(null);
-      setPage(1);
-      await loadUsers();
-    } catch (submitError) {
-      setError(submitError.message || "Failed to save user.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleEdit = (user) => {
-    setEditingId(user.id);
-    setForm({
-      name: user.name || "",
-      email: user.email || "",
-      password: "",
-      role: user.role || "USER",
-    });
-  };
 
   const handleDelete = async (userId) => {
     if (!window.confirm("Delete this user record? This action cannot be undone.")) return;
@@ -246,9 +198,6 @@ export default function AdminUsersPage() {
                         <button onClick={() => openUserDetails(user.id)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50">
                           <FaEye /> View
                         </button>
-                        <button onClick={() => handleEdit(user)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50">
-                          <FaEdit /> Edit
-                        </button>
                         <button onClick={() => handleDelete(user.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-red-600 hover:bg-red-100">
                           <FaTrash /> Delete
                         </button>
@@ -280,40 +229,6 @@ export default function AdminUsersPage() {
           ) : null}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500">User actions</p>
-              <h2 className="text-xl font-bold text-slate-900">{editingId ? "Edit user" : "Add user"}</h2>
-            </div>
-            <button type="button" onClick={() => { setEditingId(null); setForm({ name: "", email: "", password: "", role: "USER" }); }} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">{editingId ? "Reset" : "New"}</button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Name</label>
-              <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="Jane Doe" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
-              <input type="email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="jane@example.com" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
-              <input type="password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder={editingId ? "Leave blank to keep current password" : "Create a password"} />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Role</label>
-              <select value={form.role} onChange={(event) => setForm((current) => ({ ...current, role: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500">
-                <option value="USER">USER</option>
-                <option value="ADMIN">ADMIN</option>
-              </select>
-            </div>
-            <button type="submit" disabled={submitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
-              <FaPlus /> {submitting ? "Saving..." : editingId ? "Update user" : "Add user"}
-            </button>
-          </form>
-        </div>
       </div>
 
       {selectedUser ? (

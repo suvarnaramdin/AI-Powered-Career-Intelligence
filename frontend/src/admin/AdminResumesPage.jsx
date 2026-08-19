@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaSearch, FaChevronLeft, FaChevronRight, FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaSearch, FaChevronLeft, FaChevronRight, FaEye, FaTrash } from "react-icons/fa";
 import { API_BASE_URL } from "../config/api";
 import { adminFetch, getAdminToken } from "./adminAuth";
 
@@ -25,9 +25,6 @@ export default function AdminResumesPage() {
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ user_email: "", filename: "", content: "", parsed_summary: "" });
-  const [submitting, setSubmitting] = useState(false);
   const debouncedSearch = useDebouncedValue(search, 350);
 
   const loadResumes = async () => {
@@ -81,52 +78,6 @@ export default function AdminResumesPage() {
 
   const totalPages = useMemo(() => Math.max(Math.ceil(total / pageSize), 1), [total, pageSize]);
   const showingText = total ? `Showing ${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} resumes` : "Showing 0 resumes";
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!form.user_email.trim() || !form.filename.trim()) {
-      setError("User email and filename are required.");
-      return;
-    }
-
-    setSubmitting(true);
-    setError("");
-
-    try {
-      const body = {
-        user_email: form.user_email,
-        filename: form.filename,
-        content: form.content,
-        parsed_summary: form.parsed_summary || form.content,
-        parsed_skills: form.content ? form.content.split(/[,\n]/).map((value) => value.trim()).filter(Boolean).slice(0, 8) : [],
-      };
-
-      if (editingId) {
-        await adminFetch(`/api/admin/resumes/${editingId}`, { method: "PUT", body: JSON.stringify(body) });
-      } else {
-        await adminFetch("/api/admin/resumes", { method: "POST", body: JSON.stringify(body) });
-      }
-
-      setForm({ user_email: "", filename: "", content: "", parsed_summary: "" });
-      setEditingId(null);
-      setPage(1);
-      await loadResumes();
-    } catch (submitError) {
-      setError(submitError.message || "Failed to save resume.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleEdit = (resume) => {
-    setEditingId(resume.id);
-    setForm({
-      user_email: resume.user_email || "",
-      filename: resume.filename || "",
-      content: resume.content || "",
-      parsed_summary: resume.parsed_summary || "",
-    });
-  };
 
   const handleDelete = async (resumeId) => {
     if (!window.confirm("Delete this resume? This action cannot be undone.")) return;
@@ -195,7 +146,6 @@ export default function AdminResumesPage() {
                   <td className="px-5 py-4 text-sm">
                     <div className="flex flex-wrap gap-2">
                       <button onClick={() => openResumeDetails(resume.id)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"><FaEye /> View</button>
-                      <button onClick={() => handleEdit(resume)} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 hover:bg-slate-50"><FaEdit /> Edit</button>
                       <button onClick={() => handleDelete(resume.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-red-600 hover:bg-red-100"><FaTrash /> Delete</button>
                     </div>
                   </td>
@@ -216,37 +166,6 @@ export default function AdminResumesPage() {
           ) : null}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500">Resume actions</p>
-              <h2 className="text-xl font-bold text-slate-900">{editingId ? "Edit resume" : "Add resume"}</h2>
-            </div>
-            <button type="button" onClick={() => { setEditingId(null); setForm({ user_email: "", filename: "", content: "", parsed_summary: "" }); }} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">{editingId ? "Reset" : "New"}</button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">User email</label>
-              <input type="email" value={form.user_email} onChange={(event) => setForm((current) => ({ ...current, user_email: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="user@example.com" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Filename</label>
-              <input value={form.filename} onChange={(event) => setForm((current) => ({ ...current, filename: event.target.value }))} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="resume.txt" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Summary</label>
-              <textarea value={form.parsed_summary} onChange={(event) => setForm((current) => ({ ...current, parsed_summary: event.target.value }))} rows="3" className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="Resume summary" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Content</label>
-              <textarea value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} rows="6" className="w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="Paste resume content..." />
-            </div>
-            <button type="submit" disabled={submitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
-              <FaPlus /> {submitting ? "Saving..." : editingId ? "Update resume" : "Add resume"}
-            </button>
-          </form>
-        </div>
       </div>
 
       {selectedResume ? (
