@@ -501,6 +501,51 @@ CREATE TABLE IF NOT EXISTS `admin_notifications` (
   KEY `ix_admin_notifications_recipient` (`recipient_admin_id`),
   KEY `ix_admin_notifications_created` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `interview_questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(100) NOT NULL,
+  `subcategory` varchar(100) NOT NULL DEFAULT 'General',
+  `question` text NOT NULL,
+  `answer` text NOT NULL,
+  `explanation` text NOT NULL,
+  `difficulty` varchar(20) NOT NULL DEFAULT 'Beginner',
+  `tags` text NOT NULL,
+  `code_example` text DEFAULT NULL,
+  `expected_output` text DEFAULT NULL,
+  `tips` text DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `ix_interview_questions_category` (`category`),
+  KEY `ix_interview_questions_difficulty` (`difficulty`),
+  KEY `ix_interview_questions_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `interview_bookmarks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_interview_bookmark` (`user_id`, `question_id`),
+  KEY `ix_interview_bookmarks_user` (`user_id`),
+  KEY `ix_interview_bookmarks_question` (`question_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `interview_practice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `answer_submitted` text DEFAULT NULL,
+  `completed` tinyint(1) NOT NULL DEFAULT 0,
+  `practiced_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `ix_interview_practice_user` (`user_id`),
+  KEY `ix_interview_practice_question` (`question_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

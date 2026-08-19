@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, DateTime, Float, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Date, DateTime, Float, JSON, ForeignKey, UniqueConstraint
 from sqlalchemy.sql import func
 from database import Base
 
@@ -200,3 +200,44 @@ class Notification(Base):
     related_entity_id = Column(String(100), nullable=True)
     is_read = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+
+
+class InterviewQuestion(Base):
+    __tablename__ = "interview_questions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    category = Column(String(100), nullable=False, index=True)
+    subcategory = Column(String(100), nullable=False, default="General")
+    question = Column(Text, nullable=False)
+    answer = Column(Text, nullable=False)
+    explanation = Column(Text, nullable=False, default="")
+    difficulty = Column(String(20), nullable=False, default="Beginner", index=True)
+    tags = Column(Text, nullable=False, default="")
+    code_example = Column(Text, nullable=True)
+    expected_output = Column(Text, nullable=True)
+    tips = Column(Text, nullable=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    is_active = Column(Integer, nullable=False, default=1, index=True)
+
+
+class InterviewBookmark(Base):
+    __tablename__ = "interview_bookmarks"
+    __table_args__ = (UniqueConstraint("user_id", "question_id", name="uq_interview_bookmark"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    question_id = Column(Integer, ForeignKey("interview_questions.id"), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class InterviewPractice(Base):
+    __tablename__ = "interview_practice"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    question_id = Column(Integer, ForeignKey("interview_questions.id"), nullable=False, index=True)
+    answer_submitted = Column(Text, nullable=True)
+    completed = Column(Integer, nullable=False, default=0)
+    practiced_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
