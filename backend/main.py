@@ -157,19 +157,6 @@ def get_current_user(
     return user
 
 
-def get_email_from_token(credentials: Optional[HTTPAuthorizationCredentials]) -> Optional[str]:
-    """Extract email from JWT token without database lookup"""
-    if credentials is None or not credentials.credentials:
-        return None
-
-    try:
-        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        email = payload.get("sub") or payload.get("email")
-        return email
-    except JWTError:
-        return None
-
-
 def require_admin_user(current_user: models.User = Depends(get_current_user)) -> models.User:
     if (current_user.role or "USER").upper() != "ADMIN":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
@@ -1238,8 +1225,8 @@ def get_admin_profiles(
             "total_profiles": total,
             "completed_profiles": db.query(models.Profile).filter(models.Profile.completion_percentage >= 80).count() if _model_has_column(models.Profile, "completion_percentage") else total,
             "incomplete_profiles": max(total - (db.query(models.Profile).filter(models.Profile.completion_percentage >= 80).count() if _model_has_column(models.Profile, "completion_percentage") else total), 0),
-            "average_profile_completion": round(
-                db.query(func.avg(models.Profile.completion_percentage)).scalar() if _model_has_column(models.Profile, "completion_percentage") else 0,
+                "average_profile_completion": round(
+                    db.query(func.avg(models.Profile.completion_percentage)).scalar() or 0 if _model_has_column(models.Profile, "completion_percentage") else 0,
                 2,
             ) if _model_has_column(models.Profile, "completion_percentage") else 0,
         },
@@ -2345,7 +2332,12 @@ def _record_profile_history(db: Session, email: str, action: str, payload: Optio
     db.add(history_entry)
 
 
-def _apply_profile_payload(profile: models.Profile, payload: schemas.ProfileCreate) -> None:
+def _require_requested_owner(requested_email: str, current_user: models.User) -> None:
+    if (requested_email or "").strip().lower() != (current_user.email or "").strip().lower():
+        raise HTTPException(status_code=404, detail="Resource not found")
+
+
+def _apply_profile_payload(profile: models.Profile, payload: schemas.ProfileCreate, owner_email: str) -> None:
     contact_info = payload.contact_info or {}
     if hasattr(contact_info, "model_dump"):
         contact_info = contact_info.model_dump()
@@ -2353,7 +2345,7 @@ def _apply_profile_payload(profile: models.Profile, payload: schemas.ProfileCrea
         contact_info = {}
 
     profile.fullname = payload.fullname or ""
-    profile.email = payload.email or ""
+    profile.email = owner_email
     profile.headline = payload.headline or ""
     profile.location = payload.location or ""
     profile.about = payload.about or ""
@@ -2369,7 +2361,7 @@ def _apply_profile_payload(profile: models.Profile, payload: schemas.ProfileCrea
     profile.cgpa = payload.cgpa or ""
     profile.graduation = payload.graduation or ""
     profile.contact_info = _serialize_json(
-        contact_info or {"phone": payload.phone or "", "email": payload.email or ""}
+        contact_info or {"phone": payload.phone or "", "email": owner_email}
     )
     profile.education = payload.education_text or _serialize_json(payload.education or [])
     profile.experience = payload.experience_text or _serialize_json(payload.experience or [])
@@ -2388,7 +2380,7 @@ def _apply_profile_payload(profile: models.Profile, payload: schemas.ProfileCrea
         "location": profile.location,
         "about": profile.about,
         "phone": profile.phone,
-        "email": profile.email,
+        "email": owner_email,
         "contact_info": _deserialize_json(profile.contact_info),
         "education": _deserialize_json(profile.education),
         "experience": _deserialize_json(profile.experience),
@@ -2496,8 +2488,9 @@ def get_admin_profile(current_user: models.User = Depends(require_admin_user)):
 
 
 @app.get("/profile/{email}")
-def get_profile(email: str, db: Session = Depends(get_db)):
-    profile = db.query(models.Profile).filter(models.Profile.email == email).first()
+def get_profile(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
+    profile = db.query(models.Profile).filter(models.Profile.email == current_user.email).first()
 
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
@@ -2506,22 +2499,20 @@ def get_profile(email: str, db: Session = Depends(get_db)):
 
 
 @app.post("/profile")
-def save_profile(profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
-    if not profile.email:
-        raise HTTPException(status_code=400, detail="Email is required")
-
-    existing = db.query(models.Profile).filter(models.Profile.email == profile.email).first()
+def save_profile(profile: schemas.ProfileCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    owner_email = current_user.email
+    existing = db.query(models.Profile).filter(models.Profile.email == owner_email).first()
 
     if existing:
-        _apply_profile_payload(existing, profile)
-        _record_profile_history(db, profile.email, "update", profile.model_dump())
+        _apply_profile_payload(existing, profile, owner_email)
+        _record_profile_history(db, owner_email, "update", profile.model_dump())
         db.commit()
         return {"message": "Profile Updated Successfully", "profile": _build_profile_response(existing)}
 
-    new_profile = models.Profile(email=profile.email)
-    _apply_profile_payload(new_profile, profile)
+    new_profile = models.Profile(email=owner_email)
+    _apply_profile_payload(new_profile, profile, owner_email)
     db.add(new_profile)
-    _record_profile_history(db, profile.email, "create", profile.model_dump())
+    _record_profile_history(db, owner_email, "create", profile.model_dump())
     db.commit()
     db.refresh(new_profile)
 
@@ -2529,47 +2520,54 @@ def save_profile(profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
 
 
 @app.put("/profile/{email}")
-def update_profile(email: str, profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
-    db_profile = db.query(models.Profile).filter(models.Profile.email == email).first()
+def update_profile(email: str, profile: schemas.ProfileCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
+    owner_email = current_user.email
+    db_profile = db.query(models.Profile).filter(models.Profile.email == owner_email).first()
 
     if db_profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
 
-    _apply_profile_payload(db_profile, profile)
-    _record_profile_history(db, email, "update", profile.model_dump())
+    _apply_profile_payload(db_profile, profile, owner_email)
+    _record_profile_history(db, owner_email, "update", profile.model_dump())
     db.commit()
     return {"message": "Profile Updated Successfully", "profile": _build_profile_response(db_profile)}
 
 
 @app.delete("/profile/{email}")
-def delete_profile(email: str, db: Session = Depends(get_db)):
-    profile = db.query(models.Profile).filter(models.Profile.email == email).first()
+def delete_profile(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
+    owner_email = current_user.email
+    profile = db.query(models.Profile).filter(models.Profile.email == owner_email).first()
 
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
 
-    _record_profile_history(db, email, "delete", {"email": email})
+    _record_profile_history(db, owner_email, "delete", {"email": owner_email})
     db.delete(profile)
     db.commit()
     return {"message": "Profile Deleted Successfully"}
 
 
 @app.get("/profile/{email}/completion")
-def get_profile_completion(email: str, db: Session = Depends(get_db)):
-    profile = db.query(models.Profile).filter(models.Profile.email == email).first()
+def get_profile_completion(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
+    profile = db.query(models.Profile).filter(models.Profile.email == current_user.email).first()
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
 
     return {
-        "email": email,
+        "email": current_user.email,
         "completion_percentage": profile.completion_percentage or 0,
         "completion_suggestions": _deserialize_json(profile.completion_suggestions) if profile.completion_suggestions else [],
     }
 
 
 @app.get("/profile-history")
-def get_profile_history(db: Session = Depends(get_db)):
-    entries = db.query(models.ProfileHistory).order_by(models.ProfileHistory.created_at.desc()).all()
+def get_profile_history(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    entries = db.query(models.ProfileHistory).filter(
+        models.ProfileHistory.email == current_user.email
+    ).order_by(models.ProfileHistory.created_at.desc()).all()
     return [
         {
             "id": entry.id,
@@ -2583,8 +2581,8 @@ def get_profile_history(db: Session = Depends(get_db)):
 
 
 @app.get("/profiles")
-def get_profiles(search: str = "", db: Session = Depends(get_db)):
-    query = db.query(models.Profile)
+def get_profiles(search: str = "", current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    query = db.query(models.Profile).filter(models.Profile.email == current_user.email)
     if search:
         term = f"%{search}%"
         query = query.filter(
@@ -2599,15 +2597,15 @@ def get_profiles(search: str = "", db: Session = Depends(get_db)):
     return [_build_profile_response(profile) for profile in profiles]
 
 
-def _get_profile_or_404(email: str, db: Session) -> models.Profile:
-    profile = db.query(models.Profile).filter(models.Profile.email == email).first()
+def _get_profile_or_404(current_user: models.User, db: Session) -> models.Profile:
+    profile = db.query(models.Profile).filter(models.Profile.email == current_user.email).first()
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
 
 
-def _update_profile_section(email: str, section: str, value: Any, index: Optional[int], db: Session) -> List[Any]:
-    profile = _get_profile_or_404(email, db)
+def _update_profile_section(current_user: models.User, section: str, value: Any, index: Optional[int], db: Session) -> List[Any]:
+    profile = _get_profile_or_404(current_user, db)
     current_value = _deserialize_json(getattr(profile, section)) if getattr(profile, section) else []
     if not isinstance(current_value, list):
         current_value = []
@@ -2627,8 +2625,8 @@ def _update_profile_section(email: str, section: str, value: Any, index: Optiona
     return current_value
 
 
-def _delete_profile_section_item(email: str, section: str, index: int, db: Session) -> List[Any]:
-    profile = _get_profile_or_404(email, db)
+def _delete_profile_section_item(current_user: models.User, section: str, index: int, db: Session) -> List[Any]:
+    profile = _get_profile_or_404(current_user, db)
     current_value = _deserialize_json(getattr(profile, section)) if getattr(profile, section) else []
     if not isinstance(current_value, list):
         current_value = []
@@ -2645,136 +2643,134 @@ def _delete_profile_section_item(email: str, section: str, index: int, db: Sessi
 
 
 @app.get("/profile/{email}/education")
-def get_profile_education(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_education(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.education) if profile.education else []
 
 
 @app.post("/profile/{email}/education")
-def add_profile_education(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "education", payload, None, db)
+def add_profile_education(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "education", payload, None, db)
 
 
 @app.put("/profile/{email}/education/{index}")
-def update_profile_education(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "education", payload, index, db)
+def update_profile_education(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "education", payload, index, db)
 
 
 @app.delete("/profile/{email}/education/{index}")
-def delete_profile_education(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "education", index, db)
+def delete_profile_education(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "education", index, db)
 
 
 @app.get("/profile/{email}/experience")
-def get_profile_experience(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_experience(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.experience) if profile.experience else []
 
 
 @app.post("/profile/{email}/experience")
-def add_profile_experience(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "experience", payload, None, db)
+def add_profile_experience(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "experience", payload, None, db)
 
 
 @app.put("/profile/{email}/experience/{index}")
-def update_profile_experience(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "experience", payload, index, db)
+def update_profile_experience(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "experience", payload, index, db)
 
 
 @app.delete("/profile/{email}/experience/{index}")
-def delete_profile_experience(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "experience", index, db)
+def delete_profile_experience(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "experience", index, db)
 
 
 @app.get("/profile/{email}/skills")
-def get_profile_skills(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_skills(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.skills) if profile.skills else []
 
 
 @app.post("/profile/{email}/skills")
-def add_profile_skills(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "skills", payload, None, db)
+def add_profile_skills(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "skills", payload, None, db)
 
 
 @app.put("/profile/{email}/skills/{index}")
-def update_profile_skills(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "skills", payload, index, db)
+def update_profile_skills(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "skills", payload, index, db)
 
 
 @app.delete("/profile/{email}/skills/{index}")
-def delete_profile_skills(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "skills", index, db)
+def delete_profile_skills(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "skills", index, db)
 
 
 @app.get("/profile/{email}/projects")
-def get_profile_projects(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_projects(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.projects) if profile.projects else []
 
 
 @app.post("/profile/{email}/projects")
-def add_profile_projects(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "projects", payload, None, db)
+def add_profile_projects(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "projects", payload, None, db)
 
 
 @app.put("/profile/{email}/projects/{index}")
-def update_profile_projects(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "projects", payload, index, db)
+def update_profile_projects(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "projects", payload, index, db)
 
 
 @app.delete("/profile/{email}/projects/{index}")
-def delete_profile_projects(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "projects", index, db)
+def delete_profile_projects(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "projects", index, db)
 
 
 @app.get("/profile/{email}/certifications")
-def get_profile_certifications(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_certifications(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.certifications) if profile.certifications else []
 
 
 @app.post("/profile/{email}/certifications")
-def add_profile_certifications(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "certifications", payload, None, db)
+def add_profile_certifications(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "certifications", payload, None, db)
 
 
 @app.put("/profile/{email}/certifications/{index}")
-def update_profile_certifications(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "certifications", payload, index, db)
+def update_profile_certifications(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "certifications", payload, index, db)
 
 
 @app.delete("/profile/{email}/certifications/{index}")
-def delete_profile_certifications(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "certifications", index, db)
+def delete_profile_certifications(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "certifications", index, db)
 
 
 @app.get("/profile/{email}/social-links")
-def get_profile_social_links(email: str, db: Session = Depends(get_db)):
-    profile = _get_profile_or_404(email, db)
+def get_profile_social_links(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = _get_profile_or_404(current_user, db)
     return _deserialize_json(profile.social_links) if profile.social_links else []
 
 
 @app.post("/profile/{email}/social-links")
-def add_profile_social_links(email: str, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "social_links", payload, None, db)
+def add_profile_social_links(email: str, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "social_links", payload, None, db)
 
 
 @app.put("/profile/{email}/social-links/{index}")
-def update_profile_social_links(email: str, index: int, payload: Dict[str, Any], db: Session = Depends(get_db)):
-    return _update_profile_section(email, "social_links", payload, index, db)
+def update_profile_social_links(email: str, index: int, payload: Dict[str, Any], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _update_profile_section(current_user, "social_links", payload, index, db)
 
 
 @app.delete("/profile/{email}/social-links/{index}")
-def delete_profile_social_links(email: str, index: int, db: Session = Depends(get_db)):
-    return _delete_profile_section_item(email, "social_links", index, db)
+def delete_profile_social_links(email: str, index: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _delete_profile_section_item(current_user, "social_links", index, db)
 
 
 @app.post("/account/change-password")
-def change_password(payload: schemas.PasswordChangeRequest, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == payload.email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+def change_password(payload: schemas.PasswordChangeRequest, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    user = current_user
 
     if not bcrypt.checkpw(payload.current_password.encode(), user.password.encode()):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
@@ -2785,13 +2781,12 @@ def change_password(payload: schemas.PasswordChangeRequest, db: Session = Depend
 
 
 @app.post("/resume/upload", response_model=schemas.ResumeUploadResponse)
-def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: Optional[int] = Form(None), db: Session = Depends(get_db)):
+def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: Optional[int] = Form(None), current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
-        if not email:
-            raise HTTPException(status_code=400, detail="Email is required")
+        owner_email = current_user.email
 
         safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", file.filename or "resume")
-        file_path = UPLOAD_DIR / f"{email.replace('@', '_at_')}_{safe_name}"
+        file_path = UPLOAD_DIR / f"{owner_email.replace('@', '_at_')}_{safe_name}"
 
         contents = file.file.read()
         file_path.write_bytes(contents)
@@ -2800,10 +2795,10 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
         parsed_data = parse_resume_text(text)
 
         if not parsed_data["email"]:
-            parsed_data["email"] = email
+            parsed_data["email"] = owner_email
 
         resume = models.Resume(
-            user_email=email,
+            user_email=owner_email,
             filename=safe_name,
             stored_path=str(file_path),
             content=text,
@@ -2859,7 +2854,10 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
         }
         if job_id is not None and job_id > 0:
             try:
-                job = db.query(models.JobDescription).filter(models.JobDescription.id == job_id).first()
+                job = db.query(models.JobDescription).filter(
+                    models.JobDescription.id == job_id,
+                    models.JobDescription.user_email == owner_email,
+                ).first()
                 if job:
                     result = compare_resume_job(text, job.description)
                     if result:
@@ -2885,6 +2883,8 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
             "file_path": str(file_path),
             "analysis": analysis_result,
         }
+    except HTTPException:
+        raise
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -2896,8 +2896,11 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
 
 
 @app.get("/resume/{resume_id}/download")
-def download_resume(resume_id: int, db: Session = Depends(get_db)):
-    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+def download_resume(resume_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    resume = db.query(models.Resume).filter(
+        models.Resume.id == resume_id,
+        models.Resume.user_email == current_user.email,
+    ).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
 
@@ -2909,8 +2912,11 @@ def download_resume(resume_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/resume/{resume_id}/view")
-def view_resume(resume_id: int, db: Session = Depends(get_db)):
-    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+def view_resume(resume_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    resume = db.query(models.Resume).filter(
+        models.Resume.id == resume_id,
+        models.Resume.user_email == current_user.email,
+    ).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
 
@@ -2926,24 +2932,26 @@ def view_resume(resume_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/resume/{resume_id}")
-def replace_resume(resume_id: int, file: UploadFile = File(...), email: str = Form(""), db: Session = Depends(get_db)):
-    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+def replace_resume(resume_id: int, file: UploadFile = File(...), email: str = Form(""), current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    resume = db.query(models.Resume).filter(
+        models.Resume.id == resume_id,
+        models.Resume.user_email == current_user.email,
+    ).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
 
-    if not email:
-        email = resume.user_email or ""
+    owner_email = current_user.email
 
     old_path = Path(resume.stored_path or "") if resume.stored_path else None
     safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", file.filename or "resume")
-    file_path = UPLOAD_DIR / f"{email.replace('@', '_at_')}_{safe_name}"
+    file_path = UPLOAD_DIR / f"{owner_email.replace('@', '_at_')}_{safe_name}"
     contents = file.file.read()
     file_path.write_bytes(contents)
 
     text = extract_text_from_file(contents, safe_name)
     parsed_data = parse_resume_text(text)
     if not parsed_data["email"]:
-        parsed_data["email"] = email
+        parsed_data["email"] = owner_email
 
     resume.filename = safe_name
     resume.stored_path = str(file_path)
@@ -2970,8 +2978,11 @@ def replace_resume(resume_id: int, file: UploadFile = File(...), email: str = Fo
 
 
 @app.delete("/resume/{resume_id}")
-def delete_resume(resume_id: int, db: Session = Depends(get_db)):
-    resume = db.query(models.Resume).filter(models.Resume.id == resume_id).first()
+def delete_resume(resume_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    resume = db.query(models.Resume).filter(
+        models.Resume.id == resume_id,
+        models.Resume.user_email == current_user.email,
+    ).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
 
@@ -2988,15 +2999,17 @@ def delete_resume(resume_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/resumes/{email}", response_model=List[schemas.ResumeOut])
-def get_user_resumes(email: str, db: Session = Depends(get_db)):
-    return db.query(models.Resume).filter(models.Resume.user_email == email).order_by(models.Resume.id.desc()).all()
+def get_user_resumes(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
+    return db.query(models.Resume).filter(models.Resume.user_email == current_user.email).order_by(models.Resume.id.desc()).all()
 @app.post("/job-description")
 def add_job_description(
     job: schemas.JobDescriptionCreate,
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     new_job = models.JobDescription(
-        user_email=job.user_email,
+        user_email=current_user.email,
         job_title=job.job_title,
         company_name=job.company_name,
         description=job.description,
@@ -3014,18 +3027,19 @@ def add_job_description(
     "/job-description/{email}",
     response_model=List[schemas.JobDescriptionOut]
 )
-def get_jobs(email: str, db: Session = Depends(get_db)):
+def get_jobs(email: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_requested_owner(email, current_user)
     return (
         db.query(models.JobDescription)
-        .filter(models.JobDescription.user_email == email)
+        .filter(models.JobDescription.user_email == current_user.email)
         .order_by(models.JobDescription.id.desc())
         .all()
     )
 @app.delete("/job-description/{id}")
-def delete_job(id: int, db: Session = Depends(get_db)):
+def delete_job(id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     job = (
         db.query(models.JobDescription)
-        .filter(models.JobDescription.id == id)
+        .filter(models.JobDescription.id == id, models.JobDescription.user_email == current_user.email)
         .first()
     )
 
@@ -3040,11 +3054,12 @@ def delete_job(id: int, db: Session = Depends(get_db)):
 def update_job(
     id: int,
     job: schemas.JobDescriptionCreate,
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     db_job = (
         db.query(models.JobDescription)
-        .filter(models.JobDescription.id == id)
+        .filter(models.JobDescription.id == id, models.JobDescription.user_email == current_user.email)
         .first()
     )
 
@@ -3062,15 +3077,18 @@ def update_job(
 def analyze_resume(
     resume_id: int,
     job_id: int,
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     resume = db.query(models.Resume).filter(
-        models.Resume.id == resume_id
+        models.Resume.id == resume_id,
+        models.Resume.user_email == current_user.email,
     ).first()
 
     job = db.query(models.JobDescription).filter(
-        models.JobDescription.id == job_id
+        models.JobDescription.id == job_id,
+        models.JobDescription.user_email == current_user.email,
     ).first()
 
     if not resume:
@@ -3102,17 +3120,14 @@ def analyze_resume(
 def get_dashboard_data(
     resume_id: int = Body(...),
     job_description_id: int = Body(...),
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
     Get dynamic dashboard data for authenticated user.
     Returns Resume Score, Skill Match, Career Paths count, and Courses count.
     """
-    user_email = get_email_from_token(credentials)
-    
-    if not user_email:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    user_email = current_user.email
     
     try:
         from career_analysis_service import CareerAnalysisService
@@ -3141,17 +3156,14 @@ def get_dashboard_data(
 def get_career_recommendations(
     resume_id: int = Body(...),
     job_description_id: int = Body(...),
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
     Get personalized career recommendations based on resume + job description.
     Returns filtered, ranked recommendations with match explanations.
     """
-    user_email = get_email_from_token(credentials)
-    
-    if not user_email:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    user_email = current_user.email
     
     try:
         from career_analysis_service import CareerAnalysisService
@@ -3178,17 +3190,14 @@ def get_career_recommendations(
 def get_career_analytics(
     resume_id: int = Body(...),
     job_description_id: int = Body(...),
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
     Get comprehensive career analytics for authenticated user.
     Returns all metrics: readiness, employability, technical strength, quality, etc.
     """
-    user_email = get_email_from_token(credentials)
-    
-    if not user_email:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    user_email = current_user.email
     
     try:
         from career_analysis_service import CareerAnalysisService

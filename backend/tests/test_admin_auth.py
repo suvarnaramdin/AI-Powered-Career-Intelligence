@@ -25,6 +25,11 @@ class AdminAuthTests(unittest.TestCase):
         finally:
             db.close()
 
+    def user_headers(self, email, password):
+        response = self.client.post("/login", json={"email": email, "password": password})
+        self.assertEqual(response.status_code, 200, response.text)
+        return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
     def test_admin_login_and_protected_route(self):
         db = SessionLocal()
         try:
@@ -76,11 +81,13 @@ class AdminAuthTests(unittest.TestCase):
             "/register",
             json={"name": "Recommendation User", "email": "recommendation@example.com", "password": "secret123"},
         )
+        headers = self.user_headers("recommendation@example.com", "secret123")
 
         resume = self.client.post(
             "/resume/upload",
             files={"file": ("resume.txt", b"Name: Recommendation User\nSkills: Python, FastAPI, SQL\nExperience: Backend Engineer\n", "text/plain")},
             data={"email": "recommendation@example.com"},
+            headers=headers,
         )
         self.assertEqual(resume.status_code, 200)
 
@@ -92,6 +99,7 @@ class AdminAuthTests(unittest.TestCase):
                 "company_name": "ExampleCorp",
                 "description": "Python FastAPI SQL backend engineering role",
             },
+            headers=headers,
         )
         self.assertEqual(job.status_code, 200)
 
@@ -115,6 +123,8 @@ class AdminAuthTests(unittest.TestCase):
             "/register",
             json={"name": "Admin Dashboard User", "email": "dashboard-admin@example.com", "password": "secret123"},
         )
+
+        headers = self.user_headers("dashboard-admin@example.com", "secret123")
 
         db = SessionLocal()
         try:
@@ -143,6 +153,7 @@ class AdminAuthTests(unittest.TestCase):
             "/resume/upload",
             files={"file": ("resume.txt", b"Name: Admin User\nEmail: dashboard-admin@example.com\nSkills: Python, SQL\nEducation: MBA\nExperience: Admin at Career Platform\n", "text/plain")},
             data={"email": "dashboard-admin@example.com"},
+            headers=headers,
         )
 
         login = self.client.post(
@@ -179,6 +190,8 @@ class AdminAuthTests(unittest.TestCase):
         finally:
             db.close()
 
+        headers = self.user_headers("user.example@example.com", "secret123")
+
         self.client.post(
             "/profile",
             json={
@@ -194,12 +207,14 @@ class AdminAuthTests(unittest.TestCase):
                 "projects": [{"title": "Career Planner", "description": "Built a recommendation engine"}],
                 "certifications": [{"name": "AWS Practitioner"}],
             },
+            headers=headers,
         )
 
         self.client.post(
             "/resume/upload",
             files={"file": ("user_resume.txt", b"Name: User Example\nEmail: user.example@example.com\nSkills: Python, FastAPI\nEducation: B.Tech\nExperience: Backend Engineer\n", "text/plain")},
             data={"email": "user.example@example.com"},
+            headers=headers,
         )
 
         login = self.client.post(
@@ -239,6 +254,13 @@ class AdminAuthTests(unittest.TestCase):
         finally:
             db.close()
 
+        admin_login = self.client.post(
+            "/api/admin/login",
+            json={"email": "analytics.admin@example.com", "password": "secret123"},
+        )
+        self.assertEqual(admin_login.status_code, 200, admin_login.text)
+        headers = {"Authorization": f"Bearer {admin_login.json()['access_token']}"}
+
         self.client.post(
             "/job-description",
             json={
@@ -247,12 +269,14 @@ class AdminAuthTests(unittest.TestCase):
                 "company_name": "Example Corp",
                 "description": "Build APIs with Python FastAPI, React, SQL, Docker, AWS.",
             },
+            headers=headers,
         )
 
         self.client.post(
             "/resume/upload",
             files={"file": ("resume.txt", b"Name: Analyst User\nEmail: analyst@example.com\nSkills: Python, React, SQL\nExperience: 2 years\n", "text/plain")},
             data={"email": "analyst@example.com"},
+            headers=headers,
         )
 
         login = self.client.post(

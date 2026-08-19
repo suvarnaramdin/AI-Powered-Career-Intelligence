@@ -24,7 +24,7 @@ import {
   FaFire,
   FaLightbulb,
 } from "react-icons/fa";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL, clearUserSession } from "../config/api";
 
 const API = API_BASE_URL;
 
@@ -83,8 +83,7 @@ export default function CareerInsightsDashboard() {
   }, [email, navigate]);
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("email");
+    clearUserSession();
     navigate("/login");
   };
 

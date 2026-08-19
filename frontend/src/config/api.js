@@ -1,4 +1,24 @@
+import axios from "axios";
+
 const DEFAULT_RENDER_BACKEND = "https://ai-career-backend-7ipm.onrender.com";
+
+export const USER_STORAGE_KEYS = [
+  "user", "email", "token", "selectedEmail", "editing", "resume_id",
+  "selectedJob", "skillGapAnalysis", "resumeImprovementResult", "resumeBuilderProfile",
+];
+
+export const clearUserSession = () => {
+  USER_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+};
+
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token && !config.headers?.Authorization) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 const normalizeOrigin = (value) => {
   if (!value) return "";

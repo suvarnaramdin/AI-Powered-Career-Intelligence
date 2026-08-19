@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL, clearUserSession } from "../config/api";
 
 const API = API_BASE_URL;
 
@@ -30,6 +30,7 @@ export default function Login() {
     setLoading(true);
 
     try {
+      clearUserSession();
       const res = await axios.post(`${API}/login`, form);
 
       localStorage.setItem("user", res.data.user);

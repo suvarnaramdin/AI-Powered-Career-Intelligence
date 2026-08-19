@@ -14,6 +14,7 @@ import {
   FaUserCircle,
   FaPenFancy,
 } from "react-icons/fa";
+import { clearUserSession } from "../config/api";
 
 const NAV_ITEMS = [
   { label: "Dashboard", path: "/dashboard", icon: FaHome },
@@ -37,8 +38,7 @@ export default function InsightLayout({ title, subtitle, children, headerAction 
   const user = useMemo(() => localStorage.getItem("user") || "User", []);
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("email");
+    clearUserSession();
     navigate("/login");
   };
 

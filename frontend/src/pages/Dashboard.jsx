@@ -17,7 +17,7 @@ import {
   FaClipboardList,
   FaFileAlt,
 } from "react-icons/fa";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL, clearUserSession } from "../config/api";
 
 const API = API_BASE_URL;
 
@@ -36,9 +36,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("email");
-    localStorage.removeItem("token");
+    clearUserSession();
     navigate("/login");
   };
 
