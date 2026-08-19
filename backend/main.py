@@ -35,6 +35,18 @@ app = FastAPI()
 security = HTTPBearer(auto_error=False)
 
 
+def _seed_interview_questions_if_needed() -> None:
+    try:
+        with SessionLocal() as db:
+            question_count = db.query(models.InterviewQuestion).count()
+        if question_count >= 750:
+            return
+        from seed_interview_questions import seed
+        seed()
+    except Exception as exc:
+        print(f"INTERVIEW QUESTION SEEDING: SKIPPED ({type(exc).__name__}: {exc})")
+
+
 def _safe_initialize_database() -> None:
     try:
         print("DATABASE HOST:", os.getenv("DB_HOST") or os.getenv("MYSQL_HOST") or "not-set")
@@ -49,6 +61,7 @@ def _safe_initialize_database() -> None:
         ensure_profile_columns()
         ensure_user_columns()
         ensure_resume_columns()
+        _seed_interview_questions_if_needed()
         print("DATABASE INITIALIZATION: SUCCESS")
     except Exception as exc:
         print("DATABASE INITIALIZATION: FAILED")
