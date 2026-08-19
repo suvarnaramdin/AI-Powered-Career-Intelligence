@@ -484,6 +484,23 @@ ALTER TABLE `resume_analyses`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- Persistent admin notifications. Safe to run against an existing database.
+--
+CREATE TABLE IF NOT EXISTS `admin_notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `recipient_admin_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `notification_type` varchar(50) NOT NULL DEFAULT 'system',
+  `related_entity_id` varchar(100) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `ix_admin_notifications_recipient` (`recipient_admin_id`),
+  KEY `ix_admin_notifications_created` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

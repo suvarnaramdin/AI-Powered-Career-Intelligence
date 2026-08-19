@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaBell, FaChartBar, FaCog, FaFileAlt, FaHome, FaLifeRing, FaShieldAlt, FaSignOutAlt, FaUser, FaUsers, FaBriefcase, FaClipboardList, FaBookOpen, FaProjectDiagram, FaTasks, FaBellSlash } from "react-icons/fa";
-import { clearAdminSession, getAdminSession } from "./adminAuth";
+import { adminFetch, clearAdminSession, getAdminSession } from "./adminAuth";
 
 const navItems = [
   { label: "Dashboard", path: "/admin/dashboard", icon: FaHome },
@@ -27,6 +27,22 @@ export default function AdminLayout({ children }) {
   const location = useLocation();
   const session = getAdminSession();
   const [search, setSearch] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const loadUnreadCount = async () => {
+      try {
+        const payload = await adminFetch("/api/admin/notifications");
+        if (active) setUnreadCount(Number(payload.unread_count || 0));
+      } catch {
+        if (active) setUnreadCount(0);
+      }
+    };
+    loadUnreadCount();
+    const interval = window.setInterval(loadUnreadCount, 30000);
+    return () => { active = false; window.clearInterval(interval); };
+  }, []);
 
   const pageTitle = navItems.find((item) => location.pathname === item.path)?.label || "Admin Dashboard";
   const filteredNavItems = navItems.filter(({ label }) => label.toLowerCase().includes(search.toLowerCase().trim()));
@@ -80,6 +96,10 @@ export default function AdminLayout({ children }) {
               </div>
 
               <div className="flex items-center gap-3">
+                <button type="button" onClick={() => navigate("/admin/notifications")} className="relative rounded-xl border border-slate-200 bg-slate-100 p-3 text-slate-500 hover:bg-slate-200" aria-label="Open notifications">
+                  <FaBell />
+                  {unreadCount > 0 ? <span className="absolute -right-1 -top-1 min-w-5 rounded-full bg-red-600 px-1 text-center text-xs font-bold text-white">{unreadCount > 99 ? "99+" : unreadCount}</span> : null}
+                </button>
                 <div className="hidden items-center gap-3 rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 md:flex">
                   <FaBellSlash className="text-slate-500" />
                   <input

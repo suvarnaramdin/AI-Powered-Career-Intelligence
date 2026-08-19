@@ -59,6 +59,7 @@ export default function Dashboard() {
     { title: "Resume Improvement", route: "/resume-improvement" },
     { title: "Resume Builder", route: "/resume-builder" },
     { title: "Career Analytics", route: "/analytics" },
+    { title: "Feedback", route: "/feedback" },
   ];
 
   const filteredActions = actions.filter((action) => {

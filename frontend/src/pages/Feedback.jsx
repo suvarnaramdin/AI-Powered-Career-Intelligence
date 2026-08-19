@@ -5,7 +5,8 @@ import { API_BASE_URL } from "../config/api";
 import InsightLayout from "../components/InsightLayout";
 
 const API = API_BASE_URL;
-const emptyForm = { rating: 5, category: "General", message: "" };
+const emptyForm = { rating: 5, category: "General Feedback", message: "" };
+const categories = ["General Feedback", "Website/UI", "Resume Analysis", "Job Recommendations", "Course Recommendations", "Career Recommendations", "Resume Builder", "Technical Issue", "Other"];
 
 export default function Feedback() {
   const [form, setForm] = useState(emptyForm);
@@ -32,6 +33,11 @@ export default function Feedback() {
 
   const submitFeedback = async (event) => {
     event.preventDefault();
+    const trimmedMessage = form.message.trim();
+    if (!trimmedMessage) {
+      setError("Feedback message is required.");
+      return;
+    }
     setSubmitting(true);
     setMessage("");
     setError("");
@@ -39,7 +45,7 @@ export default function Feedback() {
       await axios.post(`${API}/feedback`, {
         rating: Number(form.rating),
         category: form.category,
-        message: form.message,
+        message: trimmedMessage,
       });
       setForm(emptyForm);
       setMessage("Thank you. Your feedback was sent to the support team.");
@@ -64,11 +70,7 @@ export default function Feedback() {
           <label className="mt-6 block text-sm font-semibold text-slate-700">
             Category
             <select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-3">
-              <option>General</option>
-              <option>Profile</option>
-              <option>Resume and ATS</option>
-              <option>Recommendations</option>
-              <option>Technical issue</option>
+              {categories.map((category) => <option key={category}>{category}</option>)}
             </select>
           </label>
           <fieldset className="mt-5">
@@ -99,9 +101,10 @@ export default function Feedback() {
               <article key={item.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-semibold text-slate-900">{item.category}</span>
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.status === "Resolved" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>{item.status}</span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.status === "Resolved" ? "bg-emerald-100 text-emerald-700" : item.status === "Reviewed" ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}>{item.status === "Pending" ? "Submitted" : item.status}</span>
                 </div>
                 <div className="mt-2 flex gap-1 text-amber-500">{Array.from({ length: item.rating }, (_, index) => <FaStar key={index} />)}</div>
+                <p className="mt-2 text-xs text-slate-500">Submitted {item.created_at ? new Date(item.created_at).toLocaleString() : ""}</p>
                 <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">{item.message}</p>
                 {item.admin_response ? <p className="mt-3 rounded-lg bg-white p-3 text-sm text-slate-600"><strong>Admin response:</strong> {item.admin_response}</p> : null}
               </article>

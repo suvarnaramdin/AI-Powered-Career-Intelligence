@@ -14,11 +14,10 @@ export default function AdminFeedbackDetailPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await adminFetch(`/api/admin/feedback?page=1&page_size=1000`);
-        const target = (data.items || []).find((entry) => String(entry.id) === String(feedbackId));
-        setItem(target || null);
-        setResponse(target?.admin_response || "");
-        setStatus(target?.status || "Pending");
+        const target = await adminFetch(`/api/admin/feedback/${feedbackId}`);
+        setItem(target);
+        setResponse(target.admin_response || "");
+        setStatus(target.status || "Pending");
       } finally {
         setLoading(false);
       }
@@ -70,6 +69,7 @@ export default function AdminFeedbackDetailPage() {
           <label className="block text-sm font-semibold text-slate-700">Status
             <select value={status} onChange={(event) => setStatus(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2">
               <option>Pending</option>
+              <option>Reviewed</option>
               <option>Resolved</option>
             </select>
           </label>

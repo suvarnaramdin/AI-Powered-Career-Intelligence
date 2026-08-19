@@ -582,33 +582,21 @@ def _build_certification_dataset(db: Session, search: str = "", category: str = 
     }
 
 
-def _build_feedback_dataset(db: Session, search: str = "", rating: Optional[int] = None, status: str = "", page: int = 1, page_size: int = 12):
+def _build_feedback_dataset(db: Session, search: str = "", rating: Optional[int] = None, category: str = "", status: str = "", order: str = "desc", page: int = 1, page_size: int = 12):
     items = []
-    for feedback in db.query(models.Feedback).order_by(models.Feedback.created_at.desc()).all():
+    feedback_order = models.Feedback.created_at.asc() if order.lower() == "asc" else models.Feedback.created_at.desc()
+    for feedback in db.query(models.Feedback).order_by(feedback_order).all():
+        user = db.query(models.User).filter(models.User.email == feedback.user_email).first()
         items.append({
             "id": feedback.id,
-            "user_name": feedback.user_email,
+            "user_name": user.name if user else feedback.user_email,
+            "user_email": feedback.user_email,
             "rating": feedback.rating,
             "category": feedback.category,
             "message": feedback.message,
             "date": feedback.created_at.isoformat() if feedback.created_at else datetime.utcnow().isoformat(),
             "status": feedback.status,
             "admin_response": feedback.admin_response or "",
-        })
-
-    for index, history in enumerate(db.query(models.ProfileHistory).order_by(models.ProfileHistory.created_at.desc()).all(), start=1):
-        action = (history.action or "activity").strip()
-        if action.lower() not in {"feedback", "review", "rating", "support"}:
-            continue
-        items.append({
-            "id": f"history-{index}",
-            "user_name": history.email or "System",
-            "rating": 5 if "positive" in (history.details or "").lower() else 3,
-            "category": "General",
-            "message": history.details or "No feedback text recorded.",
-            "date": (history.created_at.isoformat() if history.created_at else datetime.utcnow().isoformat()),
-            "status": "Resolved" if "resolved" in (history.details or "").lower() else "Pending",
-            "admin_response": "",
         })
 
     if not items:
@@ -621,6 +609,8 @@ def _build_feedback_dataset(db: Session, search: str = "", rating: Optional[int]
         if search_value and search_value not in haystack:
             continue
         if rating is not None and item["rating"] != rating:
+            continue
+        if category and item["category"].lower() != category.lower():
             continue
         if status and item["status"].lower() != status.lower():
             continue
@@ -710,39 +700,6 @@ def _build_activity_dataset(db: Session, search: str = "", activity_type: str = 
     return {"items": page_items, "summary": summary, "total": len(filtered), "page": page, "page_size": page_size, "total_pages": max((len(filtered) + page_size - 1) // page_size, 1) if filtered else 1, "timeline": page_items[:10]}
 
 
-def _get_notification_payload(db: Session) -> List[Dict[str, Any]]:
-    notifications = []
-    failed_resumes = db.query(models.Resume).filter((models.Resume.parsed_name == "") | (models.Resume.parsed_name.is_(None))).count()
-    if failed_resumes:
-        notifications.append({
-            "id": "resume-parsing",
-            "title": "Resume parsing requires review",
-            "description": f"{failed_resumes} resume(s) are still awaiting parsing or require review.",
-            "timestamp": datetime.utcnow().isoformat(),
-            "read": False,
-            "type": "resume",
-        })
-    if db.query(models.JobDescription).count() == 0:
-        notifications.append({
-            "id": "jobs-empty",
-            "title": "Job inventory is empty",
-            "description": "No job descriptions are currently being tracked for ATS comparison.",
-            "timestamp": datetime.utcnow().isoformat(),
-            "read": False,
-            "type": "system",
-        })
-    if db.query(models.User).count() == 0:
-        notifications.append({
-            "id": "users-empty",
-            "title": "User base is still empty",
-            "description": "No registered users are available in the current database snapshot.",
-            "timestamp": datetime.utcnow().isoformat(),
-            "read": False,
-            "type": "system",
-        })
-    return notifications
-
-
 @app.get("/api/admin/dashboard/stats")
 def get_admin_dashboard_stats(current_user: models.User = Depends(require_admin_user), db: Session = Depends(get_db)):
     total_users = db.query(models.User).count()
@@ -781,7 +738,7 @@ def get_admin_dashboard_stats(current_user: models.User = Depends(require_admin_
             cert_values.extend(_extract_skill_tokens(row[0]))
         total_certifications = len({value.strip() for value in cert_values if value.strip()})
 
-    total_feedback = 0
+    total_feedback = db.query(models.Feedback).count()
     careers_total = 0
     jobs_total = 0
 
@@ -1695,13 +1652,24 @@ def get_admin_certifications(
 def get_admin_feedback(
     search: str = "",
     rating: Optional[int] = None,
+    category: str = "",
     status: str = "",
+    order: str = "desc",
     page: int = 1,
     page_size: int = 12,
     current_user: models.User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    return _build_feedback_dataset(db, search=search, rating=rating, status=status, page=page, page_size=page_size)
+    return _build_feedback_dataset(db, search=search, rating=rating, category=category, status=status, order=order, page=page, page_size=page_size)
+
+
+@app.get("/api/admin/feedback/{feedback_id}")
+def get_admin_feedback_detail(feedback_id: int, current_user: models.User = Depends(require_admin_user), db: Session = Depends(get_db)):
+    data = _build_feedback_dataset(db, page=1, page_size=100000)
+    item = next((entry for entry in data["items"] if entry["id"] == feedback_id), None)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Feedback not found")
+    return item
 
 
 @app.patch("/api/admin/feedback/{feedback_id}")
@@ -1717,7 +1685,7 @@ def update_admin_feedback(
 
     if "status" in payload:
         next_status = str(payload["status"] or "Pending").strip().title()
-        if next_status not in {"Pending", "Resolved"}:
+        if next_status not in {"Pending", "Reviewed", "Resolved"}:
             raise HTTPException(status_code=400, detail="Invalid feedback status")
         feedback.status = next_status
     if "admin_response" in payload:
@@ -1816,42 +1784,44 @@ def get_admin_reports(current_user: models.User = Depends(require_admin_user), d
     return reports
 
 
-_notifications_state: Dict[str, Any] = {}
-
-
 @app.get("/api/admin/notifications")
 def get_admin_notifications(current_user: models.User = Depends(require_admin_user), db: Session = Depends(get_db)):
-    notifications = _get_notification_payload(db)
-    notifications_state = _notifications_state.get(current_user.email, [])
-    if notifications_state:
-        for item in notifications:
-            match = next((entry for entry in notifications_state if entry.get("id") == item["id"]), None)
-            if match:
-                item["read"] = bool(match.get("read", False))
-    unread_count = sum(1 for item in notifications if not item.get("read"))
-    return {"items": notifications, "unread_count": unread_count}
+    notifications = db.query(models.Notification).filter(
+        models.Notification.recipient_admin_id == current_user.id
+    ).order_by(models.Notification.created_at.desc()).limit(100).all()
+    items = [{
+        "id": item.id,
+        "title": item.title,
+        "description": item.message,
+        "timestamp": item.created_at.isoformat() if item.created_at else datetime.utcnow().isoformat(),
+        "read": bool(item.is_read),
+        "type": item.notification_type,
+        "related_entity_id": item.related_entity_id,
+    } for item in notifications]
+    return {"items": items, "unread_count": sum(1 for item in items if not item["read"])}
 
 
 @app.post("/api/admin/notifications/{notification_id}/read")
 def mark_admin_notification_read(notification_id: str, current_user: models.User = Depends(require_admin_user), db: Session = Depends(get_db)):
-    state = _notifications_state.setdefault(current_user.email, [])
-    existing = next((item for item in state if item.get("id") == notification_id), None)
-    if existing:
-        existing["read"] = True
-    else:
-        state.append({"id": notification_id, "read": True})
+    notification = db.query(models.Notification).filter(
+        models.Notification.id == _safe_int(notification_id),
+        models.Notification.recipient_admin_id == current_user.id,
+    ).first()
+    if notification is None:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    notification.is_read = 1
+    db.commit()
     return {"message": "Notification marked as read", "read": True}
 
 
 @app.post("/api/admin/notifications/mark-all-read")
 def mark_all_admin_notifications_read(current_user: models.User = Depends(require_admin_user), db: Session = Depends(get_db)):
-    state = _notifications_state.setdefault(current_user.email, [])
-    for item in state:
-        item["read"] = True
-    for item in _get_notification_payload(db):
-        if not any(entry.get("id") == item["id"] for entry in state):
-            state.append({"id": item["id"], "read": True})
-    return {"message": "All notifications marked as read", "read_count": len(state)}
+    count = db.query(models.Notification).filter(
+        models.Notification.recipient_admin_id == current_user.id,
+        models.Notification.is_read == 0,
+    ).update({models.Notification.is_read: 1}, synchronize_session=False)
+    db.commit()
+    return {"message": "All notifications marked as read", "read_count": count}
 
 
 @app.get("/api/admin/jobs")
@@ -2450,6 +2420,14 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     new_user = models.User(name=user.name, email=normalized_email, password=hashed.decode())
     db.add(new_user)
+    db.flush()
+    _queue_admin_notifications(
+        db,
+        "New user registered",
+        f"New user registered: {new_user.name or new_user.email}",
+        "user",
+        new_user.id,
+    )
     db.commit()
 
     return {"message": "Registration Successful"}
@@ -2457,6 +2435,24 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 def _get_admin_users(db: Session) -> List[models.User]:
     return db.query(models.User).filter(models.User.role.ilike("ADMIN")).all()
+
+
+def _queue_admin_notifications(
+    db: Session,
+    title: str,
+    message: str,
+    notification_type: str,
+    related_entity_id: Optional[Any] = None,
+) -> None:
+    for admin in _get_admin_users(db):
+        db.add(models.Notification(
+            recipient_admin_id=admin.id,
+            title=title,
+            message=message,
+            notification_type=notification_type,
+            related_entity_id=str(related_entity_id) if related_entity_id is not None else None,
+            is_read=0,
+        ))
 
 
 @app.post("/login")
@@ -2623,6 +2619,14 @@ def create_feedback(
         status="Pending",
     )
     db.add(item)
+    db.flush()
+    _queue_admin_notifications(
+        db,
+        "New feedback received",
+        f"New feedback received from {current_user.name or current_user.email}",
+        "feedback",
+        item.id,
+    )
     db.commit()
     db.refresh(item)
     return item
@@ -2893,6 +2897,14 @@ def upload_resume(file: UploadFile = File(...), email: str = Form(""), job_id: O
             db.add(resume)
             db.commit()
             db.refresh(resume)
+            _queue_admin_notifications(
+                db,
+                "New resume uploaded",
+                f"New resume uploaded by {current_user.name or owner_email}",
+                "resume",
+                resume.id,
+            )
+            db.commit()
 
             print("=" * 50)
             print("Resume saved successfully")

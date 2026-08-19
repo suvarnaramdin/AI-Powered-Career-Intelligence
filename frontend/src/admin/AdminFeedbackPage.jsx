@@ -9,6 +9,8 @@ export default function AdminFeedbackPage() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("");
   const [rating, setRating] = useState("");
+  const [category, setCategory] = useState("");
+  const [order, setOrder] = useState("desc");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -22,6 +24,8 @@ export default function AdminFeedbackPage() {
       if (search.trim()) params.set("search", search.trim());
       if (status) params.set("status", status);
       if (rating) params.set("rating", rating);
+      if (category) params.set("category", category);
+      params.set("order", order);
       const payload = await adminFetch(`/api/admin/feedback?${params.toString()}`);
       setData(payload);
     } catch (loadError) {
@@ -34,7 +38,7 @@ export default function AdminFeedbackPage() {
   useEffect(() => {
     const timer = setTimeout(loadData, 150);
     return () => clearTimeout(timer);
-  }, [search, page, status, rating]);
+  }, [search, page, status, rating, category, order]);
 
   return (
     <div className="space-y-6">
@@ -58,7 +62,9 @@ export default function AdminFeedbackPage() {
           <div className="flex flex-col gap-2 md:flex-row">
             <input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Search feedback or user" className="rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-pink-500" />
             <select value={rating} onChange={(event) => { setRating(event.target.value); setPage(1); }} className="rounded-xl border border-slate-300 px-3 py-2 text-sm"><option value="">Any rating</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select>
-            <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }} className="rounded-xl border border-slate-300 px-3 py-2 text-sm"><option value="">Any status</option><option value="Pending">Pending</option><option value="Resolved">Resolved</option></select>
+            <select value={category} onChange={(event) => { setCategory(event.target.value); setPage(1); }} className="rounded-xl border border-slate-300 px-3 py-2 text-sm"><option value="">Any category</option><option>General Feedback</option><option>Website/UI</option><option>Resume Analysis</option><option>Job Recommendations</option><option>Course Recommendations</option><option>Career Recommendations</option><option>Resume Builder</option><option>Technical Issue</option><option>Other</option></select>
+            <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }} className="rounded-xl border border-slate-300 px-3 py-2 text-sm"><option value="">Any status</option><option value="Pending">Submitted</option><option value="Reviewed">Reviewed</option><option value="Resolved">Resolved</option></select>
+            <select value={order} onChange={(event) => { setOrder(event.target.value); setPage(1); }} className="rounded-xl border border-slate-300 px-3 py-2 text-sm"><option value="desc">Newest</option><option value="asc">Oldest</option></select>
           </div>
         </div>
 
@@ -73,6 +79,7 @@ export default function AdminFeedbackPage() {
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div>
                     <p className="text-base font-semibold text-slate-900">{item.user_name}</p>
+                    <p className="text-sm text-slate-500">{item.user_email}</p>
                     <p className="text-sm text-slate-500">{new Date(item.date).toLocaleString()}</p>
                   </div>
                   <div className="flex items-center gap-3">

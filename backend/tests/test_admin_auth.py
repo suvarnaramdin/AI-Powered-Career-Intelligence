@@ -420,6 +420,66 @@ class AdminAuthTests(unittest.TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertIn("Admin login required", response.json()["detail"])
 
+    def test_feedback_and_admin_notification_flow(self):
+        db = SessionLocal()
+        try:
+            admin = models.User(
+                name="Workflow Admin",
+                email="workflow.admin@example.com",
+                password=bcrypt.hashpw("secret123".encode(), bcrypt.gensalt()).decode(),
+                role="ADMIN",
+            )
+            db.add(admin)
+            db.commit()
+        finally:
+            db.close()
+
+        registered = self.client.post(
+            "/register",
+            json={"name": "Workflow User", "email": "workflow.user@example.com", "password": "secret123"},
+        )
+        self.assertEqual(registered.status_code, 200, registered.text)
+        user_headers = self.user_headers("workflow.user@example.com", "secret123")
+        created = self.client.post(
+            "/feedback",
+            headers=user_headers,
+            json={"rating": 5, "category": "Website/UI", "message": "The dashboard is clear."},
+        )
+        self.assertEqual(created.status_code, 200, created.text)
+        feedback_id = created.json()["id"]
+
+        admin_login = self.client.post(
+            "/api/admin/login",
+            json={"email": "workflow.admin@example.com", "password": "secret123"},
+        )
+        admin_headers = {"Authorization": f"Bearer {admin_login.json()['access_token']}"}
+        notifications = self.client.get("/api/admin/notifications", headers=admin_headers)
+        self.assertEqual(notifications.status_code, 200)
+        feedback_notifications = [item for item in notifications.json()["items"] if item["type"] == "feedback"]
+        self.assertTrue(feedback_notifications)
+        self.assertGreaterEqual(notifications.json()["unread_count"], 1)
+
+        admin_feedback = self.client.get("/api/admin/feedback", headers=admin_headers)
+        self.assertEqual(admin_feedback.status_code, 200)
+        self.assertEqual(admin_feedback.json()["items"][0]["user_email"], "workflow.user@example.com")
+        detail = self.client.get(f"/api/admin/feedback/{feedback_id}", headers=admin_headers)
+        self.assertEqual(detail.status_code, 200)
+        updated = self.client.patch(
+            f"/api/admin/feedback/{feedback_id}",
+            headers=admin_headers,
+            json={"status": "Reviewed"},
+        )
+        self.assertEqual(updated.status_code, 200)
+
+        user_feedback = self.client.get("/feedback", headers=user_headers)
+        self.assertEqual(user_feedback.json()[0]["status"], "Reviewed")
+        self.assertEqual(self.client.get("/api/admin/notifications", headers=user_headers).status_code, 403)
+
+        notification_id = feedback_notifications[0]["id"]
+        self.assertEqual(self.client.post(f"/api/admin/notifications/{notification_id}/read", headers=admin_headers).status_code, 200)
+        refreshed = self.client.get("/api/admin/notifications", headers=admin_headers)
+        self.assertFalse(next(item for item in refreshed.json()["items"] if item["id"] == notification_id)["read"] is False)
+
     def test_reserved_admin_email_cannot_be_registered(self):
         response = self.client.post(
             "/register",
