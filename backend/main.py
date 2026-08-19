@@ -304,6 +304,7 @@ def get_interview_questions(
     difficulty: str = "",
     page: int = 1,
     page_size: int = 12,
+    include_answers: bool = False,
     current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -325,7 +326,7 @@ def get_interview_questions(
         ))
     total = query.count()
     items = query.order_by(models.InterviewQuestion.category.asc(), models.InterviewQuestion.id.asc()).offset((page - 1) * page_size).limit(page_size).all()
-    return {"items": [_interview_question_dict(item, include_answer=False) for item in items], "total": total, "page": page, "page_size": page_size, "total_pages": max(1, (total + page_size - 1) // page_size)}
+    return {"items": [_interview_question_dict(item, include_answer=include_answers) for item in items], "total": total, "page": page, "page_size": page_size, "total_pages": max(1, (total + page_size - 1) // page_size)}
 
 
 @app.get("/api/interview/questions/{question_id}")
