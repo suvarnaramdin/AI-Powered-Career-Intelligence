@@ -14,6 +14,7 @@ const API = API_BASE_URL;
 
 export default function History() {
   const navigate = useNavigate();
+  const currentEmail = localStorage.getItem("email") || "";
 
   const [profiles, setProfiles] = useState([]);
   const [history, setHistory] = useState([]);
@@ -22,7 +23,7 @@ export default function History() {
   const loadProfiles = async () => {
     try {
       const res = await axios.get(`${API}/profiles`);
-      setProfiles(res.data || []);
+      setProfiles((res.data || []).filter((profile) => profile.email === currentEmail));
     } catch (err) {
       console.error("Failed to load profiles", err);
       setProfiles([]);
@@ -32,7 +33,7 @@ export default function History() {
   const loadHistory = async () => {
     try {
       const res = await axios.get(`${API}/profile-history`);
-      setHistory(res.data || []);
+      setHistory((res.data || []).filter((entry) => entry.email === currentEmail));
     } catch (err) {
       console.error("Failed to load history", err);
       setHistory([]);
@@ -42,7 +43,7 @@ export default function History() {
   useEffect(() => {
     loadProfiles();
     loadHistory();
-  }, []);
+  }, [currentEmail]);
 
   const deleteProfile = async (email) => {
     const confirmDelete = window.confirm(
@@ -61,13 +62,13 @@ export default function History() {
     }
   };
 
-  const viewProfile = (email) => {
-    localStorage.setItem("selectedEmail", email);
+  const viewProfile = () => {
+    localStorage.setItem("selectedEmail", currentEmail);
     navigate("/profile", { state: { editing: false } });
   };
 
-  const editProfile = (email) => {
-    localStorage.setItem("selectedEmail", email);
+  const editProfile = () => {
+    localStorage.setItem("selectedEmail", currentEmail);
     navigate("/profile", { state: { editing: true } });
   };
 
@@ -211,13 +212,13 @@ export default function History() {
                     <td>
                       <div className="flex gap-3 justify-center">
                         <button
-                          onClick={() => viewProfile(item.email)}
+                          onClick={viewProfile}
                           className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg"
                         >
                           <FaEye />
                         </button>
                         <button
-                          onClick={() => editProfile(item.email)}
+                          onClick={editProfile}
                           className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg"
                         >
                           <FaEdit />
